@@ -193,6 +193,7 @@ export interface OptimizationResult {
     curtailment: number;
     tariff: number;
     cost: number;
+    load_breakdown?: Record<string, number>;
   }>;
   explanation: ExplainableMetadata;
 }

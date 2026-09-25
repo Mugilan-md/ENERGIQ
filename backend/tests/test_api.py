@@ -105,3 +105,33 @@ def test_analytics_and_alerts():
     res_alerts = client.get("/api/alerts")
     assert res_alerts.status_code == 200
     assert len(res_alerts.json()) > 0
+
+def test_milp_power_balance_and_soc_bounds():
+    response = client.post("/api/optimization/run", json={"horizon_hours": 24})
+    assert response.status_code == 200
+    data = response.json()
+    schedule = data["schedule"]
+    assert len(schedule) == 24
+
+    for item in schedule:
+        # Power balance conservation: (PV_used) + Grid_import + Battery_dis - Battery_ch - Load == 0
+        pv_used = item["renewable_gen"] - item["curtailment"]
+        balance_residual = (pv_used + item["grid_import"] + item["battery_discharge"] 
+                            - item["battery_charge"] - item["load_demand"])
+        assert abs(balance_residual) < 0.5, f"Power balance residual exceeded at step {item['time']}: {balance_residual}"
+
+        # SOC operational bounds
+        assert 15.0 <= item["battery_soc"] <= 95.0, f"SOC out of bounds at step {item['time']}: {item['battery_soc']}"
+
+    # Terminal reserve SOC
+    assert schedule[-1]["battery_soc"] >= 20.0, f"Terminal SOC below reserve: {schedule[-1]['battery_soc']}"
+
+def test_simulator_advance():
+    response = client.post("/api/simulator/advance", json={"step_minutes": 60})
+    assert response.status_code == 200
+    data = response.json()
+    assert "simulated_clock" in data
+    assert 15.0 <= data["current_soc_pct"] <= 95.0
+    assert "step_decision" in data
+    assert data["status"] == "OPTIMAL"
+

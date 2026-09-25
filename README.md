@@ -12,7 +12,7 @@
 
 Modern industrial manufacturing sites integrate on-site renewable generation (Solar PV, Wind), Battery Energy Storage Systems (BESS), complex Time-of-Use (ToU) grid contracts, and diverse industrial machine lines. While renewable generation is naturally intermittent and weather-dependent, industrial production lines have rigid schedules, tight tolerances, and non-negotiable throughput targets.
 
-**ENERGIQ** is a production-grade, AI-driven energy orchestration platform. It models behind-the-meter generation, predicts weather and machine demand profiles, tracks cyclic battery degradation, evaluates peak-demand tariff exposure, and utilizes formal **Mixed-Integer Linear Programming (MILP)** to autonomously compute optimal multi-period dispatch schedules while guaranteeing 100% feasibility for critical industrial manufacturing processes.
+**ENERGIQ** is a hackathon-grade reference implementation of a production energy-orchestration architecture. It models behind-the-meter generation, predicts weather and machine demand profiles, tracks cyclic battery degradation, evaluates peak-demand tariff exposure, and utilizes formal **Mixed-Integer Linear Programming (MILP)** to autonomously compute optimal multi-period dispatch schedules while guaranteeing 100% feasibility for critical industrial manufacturing processes.
 
 ---
 
@@ -21,7 +21,7 @@ Modern industrial manufacturing sites integrate on-site renewable generation (So
 ### Core Modules
 1. **Executive Industrial Dashboard**: Real-time KPI matrix (Renewable Gen, Industrial Demand, Grid Net Import, BESS SOC, Curtailment, Cost/Hour, Daily Savings).
 2. **Live Animated Energy Flow**: Directed Sankey-style topology showing power routing across Solar PV, BESS, Grid Substation, Central Hub, and Industrial Loads with real-time animated flow pulses.
-3. **Renewable Generation Forecaster**: Multi-horizon ML pipeline (15-min, 30-min, 1-hr, 6-hr, 24-hr) with upper and lower quantile confidence intervals (10%–90%), GHI irradiance modeling, cell temperature derating, and MAE/RMSE tracking.
+3. **Renewable Generation Forecaster**: Multi-horizon ML pipeline (15-min, 30-min, 1-hr, 6-hr, 24-hr) with upper and lower quantile confidence intervals (10%–90%), GHI irradiance modeling, cell temperature derating, and real held-out MAE/RMSE tracking. *(Note: The model currently trains and predicts on synthetic weather data; live Open-Meteo weather API integration is provided as a real-time option).*
 4. **Segmented Industrial Load Management**: Configurable load matrix modeling CNC Machining Cells (CRITICAL), Cleanroom HVAC Chiller (HIGH), Compressed Air (MEDIUM), Water Treatment Pumps (FLEXIBLE), Fleet EV Charging (FLEXIBLE), and Auxiliary UPS (MEDIUM), with safety-locked protection against arbitrary shedding of critical lines.
 5. **Battery Intelligence (BESS)**: SOC circular gauge, continuous available energy estimation, round-trip efficiency (94%), cyclic degradation cost accounting (₹0.45/kWh), thermal state tracking, and projected 24-hour SOC curves.
 6. **Dynamic Grid & Tariff Intelligence**: Time-of-Use (ToU) tariff ladder (Off-Peak ₹4.50, Standard ₹7.80, Peak ₹12.50), upcoming tier switch alarms, monthly demand charge penalty exposure calculator, and substation import ceiling monitoring.

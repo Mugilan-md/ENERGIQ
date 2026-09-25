@@ -160,6 +160,17 @@ class DataRepository:
             )
         ]
 
+        self.simulated_clock: datetime = datetime.now()
+        self.simulated_battery_soc: float = 65.0
+        self.simulated_step_count: int = 0
+
+    def advance_simulation(self, step_minutes: int, resulting_soc: float) -> datetime:
+        """Advance simulated plant clock by step_minutes and persist resulting SOC."""
+        self.simulated_clock += timedelta(minutes=step_minutes)
+        self.simulated_battery_soc = resulting_soc
+        self.simulated_step_count += 1
+        return self.simulated_clock
+
     def get_plant_summary(self) -> PlantSummary:
         return self.plant
 

@@ -163,6 +163,7 @@ class OptimizationScheduleItem(BaseModel):
     curtailment: float
     tariff: float
     cost: float
+    load_breakdown: Optional[Dict[str, float]] = None
 
 class OptimizationSummary(BaseModel):
     total_grid_cost: float
@@ -252,3 +253,21 @@ class DigitalTwinState(BaseModel):
     nodes: List[DigitalTwinNode]
     active_alerts_count: int
     timestamp: str
+
+class SimulatorAdvanceRequest(BaseModel):
+    simulated_clock: Optional[str] = None
+    current_soc_pct: Optional[float] = None
+    step_minutes: int = 60
+    renewable_multiplier: float = 1.0
+    demand_multiplier: float = 1.0
+    tariff_multiplier: float = 1.0
+    grid_limit_kw: float = 500.0
+
+class SimulatorAdvanceResponse(BaseModel):
+    simulated_clock: str
+    previous_soc_pct: float
+    current_soc_pct: float
+    step_interval_minutes: int
+    step_decision: Dict[str, Any]
+    status: str
+

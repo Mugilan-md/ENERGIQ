@@ -1,7 +1,12 @@
-from fastapi import APIRouter
-from typing import List
+from fastapi import APIRouter, Body
+from typing import List, Optional
+from datetime import datetime
 from app.optimization.milp_optimizer import milp_optimizer
-from app.models.schemas import WhatIfSimulationParams, SimulationResult, PredefinedScenario
+from app.database.repository import repository
+from app.models.schemas import (
+    WhatIfSimulationParams, SimulationResult, PredefinedScenario,
+    SimulatorAdvanceRequest, SimulatorAdvanceResponse
+)
 
 router = APIRouter(tags=["What-If Simulator"])
 
@@ -110,3 +115,59 @@ async def run_simulator(params: WhatIfSimulationParams):
     Returns side-by-side cost, peak demand, renewable utilization, curtailment, and savings.
     """
     return milp_optimizer.run_simulation(params)
+
+@router.post("/simulator/advance", response_model=SimulatorAdvanceResponse)
+async def advance_simulator(req: Optional[SimulatorAdvanceRequest] = Body(default=None)):
+    """
+    Rolling-Horizon 'Commit and Advance' MPC Step:
+    Solves full multi-period MILP horizon starting from current simulated clock and battery SOC,
+    commits the first timestep's dispatch decisions, updates repository state,
+    and advances simulated time by the specified interval.
+    """
+    if req is None:
+        req = SimulatorAdvanceRequest()
+
+    # Determine simulated clock
+    if req.simulated_clock:
+        try:
+            current_clock = datetime.fromisoformat(req.simulated_clock)
+            repository.simulated_clock = current_clock
+        except Exception:
+            current_clock = repository.simulated_clock
+    else:
+        current_clock = repository.simulated_clock
+
+    # Determine simulated SOC
+    if req.current_soc_pct is not None:
+        current_soc = req.current_soc_pct
+        repository.simulated_battery_soc = current_soc
+    else:
+        current_soc = repository.simulated_battery_soc
+
+    # Execute solve_and_commit_step
+    step_res = milp_optimizer.solve_and_commit_step(
+        current_soc_pct=current_soc,
+        start_time=current_clock,
+        renewable_multiplier=req.renewable_multiplier,
+        demand_multiplier=req.demand_multiplier,
+        tariff_multiplier=req.tariff_multiplier,
+        grid_limit_kw=req.grid_limit_kw
+    )
+
+    resulting_soc = step_res["resulting_soc_pct"]
+    prev_soc = current_soc
+
+    # Advance repository simulated state
+    new_clock = repository.advance_simulation(
+        step_minutes=req.step_minutes,
+        resulting_soc=resulting_soc
+    )
+
+    return SimulatorAdvanceResponse(
+        simulated_clock=new_clock.strftime("%Y-%m-%d %H:%M:%S"),
+        previous_soc_pct=prev_soc,
+        current_soc_pct=resulting_soc,
+        step_interval_minutes=req.step_minutes,
+        step_decision=step_res,
+        status=step_res.get("status", "OPTIMAL")
+    )

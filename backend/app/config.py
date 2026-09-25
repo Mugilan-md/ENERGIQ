@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     
     # Plant Configuration Defaults
     DEFAULT_PLANT_ID: str = "plant-elcot-01"
+    PLANT_LATITUDE: float = 13.08
+    PLANT_LONGITUDE: float = 80.27
     DEFAULT_SOLAR_CAPACITY_KW: float = 650.0
     DEFAULT_WIND_CAPACITY_KW: float = 150.0
     DEFAULT_BESS_CAPACITY_KWH: float = 800.0
