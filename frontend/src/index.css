@@ -1,53 +1,167 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+
 @layer base {
   :root {
-    --bg-app: #f8fafc;
+    --bg-app: #060913;
+    --bg-sidebar: #090f1d;
+    --surface-card: #0d1527;
+    --surface-card-hover: #131f38;
+    --surface-border: #1a263d;
+    --surface-subtle: #0f182c;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --brand-cyan: #06b6d4;
+    --brand-emerald: #10b981;
+    --brand-amber: #f59e0b;
+    --brand-rose: #f43f5e;
+    --brand-purple: #8b5cf6;
+    --brand-blue: #3b82f6;
+  }
+
+  .light {
+    --bg-app: #f4f6fa;
+    --bg-sidebar: #ffffff;
     --surface-card: #ffffff;
-    --surface-subtle: #f1f5f9;
+    --surface-card-hover: #f8fafc;
     --surface-border: #e2e8f0;
+    --surface-subtle: #f1f5f9;
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
-    --brand-primary: #0284c7;
+    --brand-cyan: #0284c7;
     --brand-emerald: #059669;
     --brand-amber: #d97706;
     --brand-rose: #e11d48;
-    --brand-indigo: #4f46e5;
+    --brand-purple: #7c3aed;
+    --brand-blue: #2563eb;
+  }
+
+  * {
+    border-color: var(--surface-border);
   }
 
   body {
     background-color: var(--bg-app);
     color: var(--text-primary);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    letter-spacing: -0.012em;
   }
 }
 
-/* Custom industrial scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+/* =========================================================================
+   Cybernetic Ambient Canvas & Microgrid Visual Grid
+   ========================================================================= */
+
+.bg-cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-/* Flow line pulse keyframes */
+.light .bg-cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+}
+
+.bg-dot-matrix {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.light .bg-dot-matrix {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+}
+
+/* =========================================================================
+   Glassmorphic & High-Tech Command Deck Surfaces
+   ========================================================================= */
+
+.glass-panel {
+  background: rgba(13, 21, 39, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.glass-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.35);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(22, 33, 58, 0.85);
+  border-color: rgba(6, 182, 212, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -4px rgba(0, 0, 0, 0.6), 0 0 25px rgba(6, 182, 212, 0.12);
+}
+
+.light .glass-card {
+  background: #ffffff;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.03);
+}
+
+.light .glass-card:hover {
+  background: #ffffff;
+  border-color: rgba(2, 132, 199, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -3px rgba(0, 0, 0, 0.07), 0 0 20px rgba(2, 132, 199, 0.08);
+}
+
+/* Luminous Glow Accents */
+.glow-cyan {
+  box-shadow: 0 0 26px -2px rgba(6, 182, 212, 0.4);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 26px -2px rgba(16, 185, 129, 0.4);
+}
+
+.glow-amber {
+  box-shadow: 0 0 26px -2px rgba(245, 158, 11, 0.4);
+}
+
+.glow-purple {
+  box-shadow: 0 0 26px -2px rgba(139, 92, 246, 0.4);
+}
+
+.glow-rose {
+  box-shadow: 0 0 26px -2px rgba(244, 63, 94, 0.4);
+}
+
+/* =========================================================================
+   Flow Line Dash & Energy Particle Animations
+   ========================================================================= */
+
 @keyframes flow-pulse {
   0% {
-    stroke-dashoffset: 24;
+    stroke-dashoffset: 28;
   }
   100% {
     stroke-dashoffset: 0;
@@ -55,11 +169,101 @@
 }
 
 .animate-flow-dash {
-  animation: flow-pulse 1.2s linear infinite;
+  animation: flow-pulse 1s linear infinite;
 }
 
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(1);
+    filter: drop-shadow(0 0 6px rgba(6, 182, 212, 0.4));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 16px rgba(6, 182, 212, 0.85));
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes beacon-ping {
+  0% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.animate-beacon-ping {
+  animation: beacon-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes radar-sweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: radar-sweep 24s linear infinite;
+}
+
+/* Shimmer Button Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.btn-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(6, 9, 19, 0.7);
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Custom Number Tabular Alignment */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }

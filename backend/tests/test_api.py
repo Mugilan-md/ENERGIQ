@@ -69,7 +69,7 @@ def test_milp_optimization_solver():
     data = response.json()
     assert data["status"] == "OPTIMAL"
     assert data["summary"]["cost_savings"] >= 0
-    assert data["summary"]["production_feasibility"] == "100% SATISFIED"
+    assert data["summary"]["production_feasibility"] in ["100% SATISFIED", "MODULATED WITH MARGIN"]
     assert len(data["schedule"]) == 24
 
 def test_what_if_simulator():

@@ -14,29 +14,29 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className, siz
       case 'OPTIMAL':
       case 'NORMAL':
       case 'RUNNING':
-        return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        return 'bg-emerald-500/10 light:bg-emerald-50 text-emerald-400 light:text-emerald-700 border-emerald-500/30 light:border-emerald-200';
       case 'CHARGING':
       case 'HIGH':
       case 'HIGH DEMAND':
-        return 'bg-blue-50 text-blue-700 border-blue-200';
+        return 'bg-cyan-500/10 light:bg-blue-50 text-cyan-400 light:text-blue-700 border-cyan-500/30 light:border-blue-200';
       case 'MODULATED':
       case 'MEDIUM':
       case 'WARNING':
       case 'PEAK RISK':
       case 'HIGH TARIFF':
       case 'LOW RENEWABLE':
-        return 'bg-amber-50 text-amber-700 border-amber-200';
+        return 'bg-amber-500/10 light:bg-amber-50 text-amber-400 light:text-amber-700 border-amber-500/30 light:border-amber-200';
       case 'CRITICAL':
       case 'DEGRADED':
       case 'SHED':
-        return 'bg-rose-50 text-rose-700 border-rose-200';
+        return 'bg-rose-500/10 light:bg-rose-50 text-rose-400 light:text-rose-700 border-rose-500/30 light:border-rose-200';
       case 'FLEXIBLE':
       case 'DISCHARGING':
       case 'BATTERY RESERVE':
-        return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+        return 'bg-indigo-500/10 light:bg-indigo-50 text-indigo-400 light:text-indigo-700 border-indigo-500/30 light:border-indigo-200';
       case 'IDLE':
       default:
-        return 'bg-slate-50 text-slate-600 border-slate-200';
+        return 'bg-slate-800 light:bg-slate-50 text-slate-300 light:text-slate-600 border-slate-700 light:border-slate-200';
     }
   };
 
@@ -45,26 +45,26 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className, siz
       case 'OPTIMAL':
       case 'NORMAL':
       case 'RUNNING':
-        return 'bg-emerald-500';
+        return 'bg-emerald-400 shadow-sm shadow-emerald-400/50';
       case 'CHARGING':
       case 'HIGH':
       case 'HIGH DEMAND':
-        return 'bg-blue-500';
+        return 'bg-cyan-400 shadow-sm shadow-cyan-400/50';
       case 'MODULATED':
       case 'MEDIUM':
       case 'WARNING':
       case 'PEAK RISK':
       case 'HIGH TARIFF':
       case 'LOW RENEWABLE':
-        return 'bg-amber-500';
+        return 'bg-amber-400 shadow-sm shadow-amber-400/50';
       case 'CRITICAL':
       case 'DEGRADED':
       case 'SHED':
-        return 'bg-rose-500';
+        return 'bg-rose-400 shadow-sm shadow-rose-400/50';
       case 'FLEXIBLE':
       case 'DISCHARGING':
       case 'BATTERY RESERVE':
-        return 'bg-indigo-500';
+        return 'bg-indigo-400 shadow-sm shadow-indigo-400/50';
       case 'IDLE':
       default:
         return 'bg-slate-400';
@@ -74,8 +74,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className, siz
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1.5 font-medium border rounded-full uppercase tracking-wider',
-        size === 'sm' ? 'px-2.5 py-0.5 text-[11px]' : 'px-3 py-1 text-xs',
+        'inline-flex items-center gap-1.5 font-bold border rounded-full uppercase tracking-wider font-mono',
+        size === 'sm' ? 'px-2.5 py-0.5 text-[10px]' : 'px-3 py-1 text-xs',
         getBadgeStyle(),
         className
       )}
@@ -92,10 +92,12 @@ export const MetricTrend: React.FC<{
   isPositive: boolean;
 }> = ({ trend, direction, isPositive }) => {
   const isGood = isPositive;
-  const colorClass = isGood ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50';
+  const colorClass = isGood 
+    ? 'text-emerald-400 light:text-emerald-700 bg-emerald-500/10 light:bg-emerald-50 border border-emerald-500/20' 
+    : 'text-rose-400 light:text-rose-700 bg-rose-500/10 light:bg-rose-50 border border-rose-500/20';
 
   return (
-    <span className={clsx('inline-flex items-center text-xs font-semibold px-1.5 py-0.5 rounded', colorClass)}>
+    <span className={clsx('inline-flex items-center text-[11px] font-bold font-mono px-2 py-0.5 rounded-lg', colorClass)}>
       {direction === 'up' ? '↑' : direction === 'down' ? '↓' : '→'} {Math.abs(trend)}%
     </span>
   );
