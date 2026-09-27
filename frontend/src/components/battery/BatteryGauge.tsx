@@ -218,15 +218,15 @@ export const BatteryGauge: React.FC<BatteryGaugeProps> = ({ battery }) => {
       </div>
 
       {/* Autonomous Strategy Recommendation Strip */}
-      <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-indigo-950/60 via-purple-950/40 to-slate-900 border border-indigo-500/35 flex items-start gap-3.5 shadow-lg">
-        <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl shrink-0 mt-0.5 shadow-md shadow-indigo-500/30">
+      <div className="mt-6 p-4 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-start gap-3.5 shadow-2xs">
+        <div className="p-2.5 bg-purple-50 text-[#8B5CF6] border border-purple-200 rounded-xl shrink-0 mt-0.5">
           <Sparkles className="w-4 h-4" />
         </div>
         <div>
-          <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest block font-mono">
+          <span className="text-[10px] font-bold text-[#8B5CF6] uppercase tracking-widest block font-mono">
             BESS Autonomous Dynamic Strategy
           </span>
-          <p className="text-xs text-slate-300 light:text-slate-700 mt-1 leading-relaxed">
+          <p className="text-xs text-[#0F172A] mt-1 leading-relaxed">
             Charge battery at 180 kW for the next 45 minutes because renewable generation exceeds current production demand and grid prices are scheduled to surge to ₹12.50/kWh at 18:00.
           </p>
         </div>

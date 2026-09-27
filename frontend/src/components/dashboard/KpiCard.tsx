@@ -1,100 +1,196 @@
 import React from 'react';
 import { KpiMetric } from '@/types';
-import { MetricTrend } from '@/components/common/StatusBadge';
+import { MoreHorizontal, Plus } from 'lucide-react';
 import clsx from 'clsx';
 
 interface KpiCardProps {
   metric: KpiMetric;
-  icon: React.ElementType;
-  accentColor?: 'sky' | 'emerald' | 'amber' | 'rose' | 'indigo' | 'slate';
+  icon?: React.ElementType;
+  accentColor?: 'sky' | 'emerald' | 'amber' | 'rose' | 'indigo' | 'purple' | 'slate';
   tooltip?: string;
   secondaryInfo?: string;
+  progressPercent?: string;
+  progressLabel?: string;
+  imgSrc1?: string;
+  imgAlt1?: string;
+  imgSrc2?: string;
+  imgAlt2?: string;
+  countdownText?: string;
 }
 
 export const KpiCard: React.FC<KpiCardProps> = ({
   metric,
-  icon: Icon,
   accentColor = 'sky',
   tooltip,
-  secondaryInfo
+  secondaryInfo,
+  progressPercent: customProgress,
+  progressLabel = 'Capacity',
+  imgSrc1,
+  imgAlt1,
+  imgSrc2,
+  imgAlt2,
+  countdownText: customCountdown
 }) => {
-  const accentStyles = {
-    sky: {
-      bar: 'from-cyan-400 to-blue-500',
-      iconBox: 'bg-cyan-500/10 text-cyan-400 light:text-cyan-600 border-cyan-500/20',
-      hoverGlow: 'hover:border-cyan-500/30'
+  // Map accentColor to semantic colorClass
+  // Solar: green (#10B981)
+  // Battery: purple (#8B5CF6)
+  // Grid: orange (#F59E0B)
+  // Industrial Loads: blue (#0EA5E9)
+  // Critical: red (#EF4444)
+  const colorClassMap: Record<string, string> = {
+    emerald: 'green',
+    sky: 'blue',
+    amber: 'orange',
+    rose: 'red',
+    indigo: 'purple',
+    purple: 'purple',
+    slate: 'blue'
+  };
+
+  const colorClass = colorClassMap[accentColor] || 'blue';
+
+  // Compute realistic progress percent based on industrial metrics
+  const getProgressData = () => {
+    if (customProgress) return customProgress;
+    const val = typeof metric.value === 'number' ? metric.value : parseFloat(String(metric.value).replace(/[^0-9.]/g, '')) || 50;
+    const labelUpper = metric.label.toUpperCase();
+
+    if (labelUpper.includes('BATTERY') || labelUpper.includes('SOC')) {
+      return `${Math.min(100, Math.max(0, val)).toFixed(0)}%`;
+    }
+    if (labelUpper.includes('RENEWABLE') || labelUpper.includes('SOLAR')) {
+      // 650 kWp installed PV capacity
+      return `${Math.min(100, Math.max(0, (val / 650) * 100)).toFixed(0)}%`;
+    }
+    if (labelUpper.includes('DEMAND') || labelUpper.includes('LOAD')) {
+      // 800 kW max plant load rating
+      return `${Math.min(100, Math.max(0, (val / 800) * 100)).toFixed(0)}%`;
+    }
+    if (labelUpper.includes('GRID') || labelUpper.includes('CONSUMPTION') || labelUpper.includes('PEAK') || labelUpper.includes('IMPORT')) {
+      // 500 kW grid sanction limit
+      return `${Math.min(100, Math.max(0, (val / 500) * 100)).toFixed(0)}%`;
+    }
+    if (labelUpper.includes('CURTAILMENT')) {
+      return `${Math.min(100, Math.max(0, val)).toFixed(0)}%`;
+    }
+    if (labelUpper.includes('SAVINGS') || labelUpper.includes('COST')) {
+      return '84%';
+    }
+    return '68%';
+  };
+
+  const progressPercent = getProgressData();
+
+  // Curated Unsplash engineer / operator avatars
+  const defaultAvatars: Record<string, { src1: string; alt1: string; src2: string; alt2: string }> = {
+    green: {
+      src1: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      alt1: 'Solar PV Lead',
+      src2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+      alt2: 'Array Specialist'
     },
-    emerald: {
-      bar: 'from-emerald-400 to-teal-500',
-      iconBox: 'bg-emerald-500/10 text-emerald-400 light:text-emerald-600 border-emerald-500/20',
-      hoverGlow: 'hover:border-emerald-500/30'
+    blue: {
+      src1: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+      alt1: 'Plant Operations Manager',
+      src2: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
+      alt2: 'SCADA Dispatcher'
     },
-    amber: {
-      bar: 'from-amber-400 to-orange-500',
-      iconBox: 'bg-amber-500/10 text-amber-400 light:text-amber-600 border-amber-500/20',
-      hoverGlow: 'hover:border-amber-500/30'
+    orange: {
+      src1: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80',
+      alt1: 'Substation Control Lead',
+      src2: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80',
+      alt2: 'Feeder Specialist'
     },
-    rose: {
-      bar: 'from-rose-400 to-pink-500',
-      iconBox: 'bg-rose-500/10 text-rose-400 light:text-rose-600 border-rose-500/20',
-      hoverGlow: 'hover:border-rose-500/30'
+    purple: {
+      src1: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      alt1: 'BESS Battery Specialist',
+      src2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+      alt2: 'Thermal Engineer'
     },
-    indigo: {
-      bar: 'from-purple-400 to-indigo-500',
-      iconBox: 'bg-indigo-500/10 text-indigo-400 light:text-indigo-600 border-indigo-500/20',
-      hoverGlow: 'hover:border-indigo-500/30'
-    },
-    slate: {
-      bar: 'from-slate-400 to-slate-500',
-      iconBox: 'bg-slate-700/20 text-slate-300 light:text-slate-600 border-slate-700/30',
-      hoverGlow: 'hover:border-slate-500/30'
+    red: {
+      src1: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+      alt1: 'Safety Auditor',
+      src2: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      alt2: 'Interconnect Officer'
     }
   };
 
-  const style = accentStyles[accentColor];
+  const avatars = defaultAvatars[colorClass] || defaultAvatars.blue;
+  const avatar1 = imgSrc1 || avatars.src1;
+  const avatar2 = imgSrc2 || avatars.src2;
+
+  // Countdown / Tag string
+  const countdownText = customCountdown || (
+    metric.trend ? `${metric.trend_direction === 'up' ? '↑' : metric.trend_direction === 'down' ? '↓' : '→'} ${metric.trend}` : 'LIVE'
+  );
 
   return (
-    <div
-      className={clsx(
-        'bg-slate-900/60 light:bg-white rounded-2xl p-4.5 border border-slate-800/80 light:border-slate-200/90 shadow-sm backdrop-blur-md transition-all duration-200 relative group overflow-hidden hover:shadow-md hover:-translate-y-0.5',
-        style.hoverGlow
-      )}
-      title={tooltip}
-    >
-      {/* Refined subtle top indicator line */}
-      <div className={clsx('absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r opacity-70 group-hover:opacity-100 transition-opacity', style.bar)} />
-
-      {/* Header: Label + Minimal Icon Box */}
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-semibold text-slate-400 light:text-slate-500 uppercase tracking-wider font-mono truncate">
+    <div className={clsx('card bg-white border border-[#E2E8F0] shadow-xs', colorClass)} title={tooltip}>
+      {/* Card Header: Label & Action Icon */}
+      <div className="card-header">
+        <div className="date font-mono text-xs font-semibold text-[#64748B] uppercase tracking-wider">
           {metric.label}
-        </span>
-        <div className={clsx('p-1.5 rounded-lg border shrink-0 transition-transform duration-200 group-hover:scale-105', style.iconBox)}>
-          <Icon className="w-3.5 h-3.5" />
+        </div>
+        <MoreHorizontal className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" />
+      </div>
+
+      {/* Card Body: Metric Value, Description, Progress */}
+      <div className="card-body">
+        <h3 className="flex items-baseline gap-1.5">
+          <span className="tabular-nums font-mono font-extrabold text-2xl lg:text-3xl tracking-tight text-[#0F172A]">
+            {typeof metric.value === 'number' ? metric.value.toLocaleString(undefined, { maximumFractionDigits: 1 }) : metric.value}
+          </span>
+          <span className="text-xs font-bold text-[#64748B] uppercase font-mono">
+            {metric.unit}
+          </span>
+        </h3>
+        <p className="line-clamp-1 text-xs text-[#64748B] mt-1 mb-3">
+          {secondaryInfo || metric.context}
+        </p>
+
+        {/* Progress bar container */}
+        <div className="progress">
+          <span className="text-[11px] font-medium text-[#64748B]">{progressLabel}</span>
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{ width: progressPercent }}
+            />
+          </div>
+          <span className="text-[11px] font-mono font-bold text-[#0F172A]">{progressPercent}</span>
         </div>
       </div>
 
-      {/* Metric Numerical Readout */}
-      <div className="mt-2.5 flex items-baseline gap-1.5">
-        <span className="text-2xl font-bold tracking-tight text-white light:text-slate-900 font-mono tabular-nums">
-          {typeof metric.value === 'number' ? metric.value.toLocaleString(undefined, { maximumFractionDigits: 1 }) : metric.value}
-        </span>
-        <span className="text-xs font-medium text-slate-400 light:text-slate-500 uppercase font-mono">
-          {metric.unit}
-        </span>
-      </div>
+      {/* Card Footer: Operators, Add, Countdown/Status Tag */}
+      <div className="card-footer pt-3 border-t border-slate-100 flex items-center justify-between">
+        <ul className="flex items-center">
+          {avatar1 && (
+            <li>
+              <img src={avatar1} alt={imgAlt1 || 'operator 1'} className="w-6 h-6 rounded-full border-2 border-white object-cover shadow-2xs" />
+            </li>
+          )}
+          {avatar2 && (
+            <li>
+              <img src={avatar2} alt={imgAlt2 || 'operator 2'} className="w-6 h-6 rounded-full border-2 border-white object-cover shadow-2xs" />
+            </li>
+          )}
+          <li>
+            <button
+              onClick={(e) => e.preventDefault()}
+              className="btn-add"
+              title="Add dispatch threshold"
+            >
+              <Plus className="w-3 h-3" />
+            </button>
+          </li>
+        </ul>
 
-      {/* Subtext and Trend Indicator */}
-      <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-slate-800/60 light:border-slate-100 text-[11px]">
-        <MetricTrend
-          trend={metric.trend}
-          direction={metric.trend_direction}
-          isPositive={metric.is_positive_trend}
-        />
-        <span className="text-slate-400 light:text-slate-500 truncate max-w-[170px] text-right font-sans">
-          {secondaryInfo || metric.context}
+        <span className="btn-countdown text-[11px] font-mono font-bold">
+          {countdownText}
         </span>
       </div>
     </div>
   );
 };
+
+export default KpiCard;

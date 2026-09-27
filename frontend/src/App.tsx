@@ -3,6 +3,7 @@ import { api } from '@/services/api';
 import {
   PlantSummary,
   ExecutiveDashboardKPIs,
+  KpiMetric,
   EnergyFlowData,
   ForecastData,
   IndustrialLoad,
@@ -21,7 +22,6 @@ import { Sidebar, NavSection } from '@/components/layout/Sidebar';
 import { TopBar } from '@/components/layout/TopBar';
 import { KpiCard } from '@/components/dashboard/KpiCard';
 import { EnergyFlowDiagram } from '@/components/dashboard/EnergyFlowDiagram';
-import { RecommendationCard } from '@/components/dashboard/RecommendationCard';
 import { ForecastChart } from '@/components/forecast/ForecastChart';
 import { LoadMatrix } from '@/components/loads/LoadMatrix';
 import { BatteryGauge } from '@/components/battery/BatteryGauge';
@@ -46,15 +46,11 @@ import {
   AlertCircle,
   Sparkles,
   ShieldCheck,
-  Radio,
   CheckCircle2,
   GitFork,
   SunMedium,
   ArrowUpRight,
   ChevronRight,
-  Activity,
-  Cpu,
-  Layers,
   Leaf
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -74,35 +70,9 @@ export function App() {
   const [isCopilotDispatching, setIsCopilotDispatching] = useState(false);
   const [isCopilotAuthorized, setIsCopilotAuthorized] = useState(false);
 
-  // Dark mode theme state (defaulting to dark command center)
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('energiq_theme');
-      return saved ? saved === 'dark' : true;
-    }
-    return true;
-  });
-
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
-  };
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('energiq_theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
-
-  const toggleTheme = () => {
-    setIsDarkMode(prev => !prev);
-    showToast(isDarkMode ? 'Switched to Executive Light Mode' : 'Switched to Dark Command Center');
   };
 
   // Keyboard shortcut for Command Palette
@@ -149,9 +119,10 @@ export function App() {
         flowRes,
         forecastRes,
         loadsRes,
-        batteryRes,
+        battRes,
         gridRes,
-        scenariosRes,
+        recRes,
+        scenRes,
         twinRes,
         analyticsRes,
         alertsRes
@@ -163,9 +134,10 @@ export function App() {
         api.getLoads(),
         api.getBatteryState(),
         api.getGridInfo(),
+        api.getRecommendations(),
         api.getScenarios(),
         api.getDigitalTwin(),
-        api.getAnalytics('week'),
+        api.getAnalytics('day'),
         api.getAlerts()
       ]);
 
@@ -174,25 +146,22 @@ export function App() {
       setEnergyFlow(flowRes);
       setForecast(forecastRes);
       setLoads(loadsRes);
-      setBattery(batteryRes);
+      setBattery(battRes);
       setGridInfo(gridRes);
-      setScenarios(scenariosRes);
+      setRecommendation(recRes);
+      setScenarios(scenRes);
       setDigitalTwin(twinRes);
       setAnalyticsData(analyticsRes);
       setAlerts(alertsRes);
 
-      // Run initial baseline optimization & simulation
-      const optRes = await api.runOptimization({ horizon_hours: 24 });
-      setOptimizationResult(optRes);
-      setRecommendation(optRes.explanation);
-
+      // Run baseline scenario for simulation preview
       const simRes = await api.runSimulator({
         renewable_multiplier: 1.0,
         demand_multiplier: 1.0,
-        initial_battery_soc: 65.0,
+        initial_battery_soc: 65,
         tariff_multiplier: 1.0,
-        grid_limit_kw: 500.0,
-        battery_reserve_pct: 20.0,
+        grid_limit_kw: 500,
+        battery_reserve_pct: 20,
         load_flexibility_pct: 15.0
       });
       setSimulationResult(simRes);
@@ -300,29 +269,61 @@ export function App() {
     }
   };
 
-  return (
-    <div className={`flex h-screen w-screen overflow-hidden font-sans transition-colors duration-300 relative ${isDarkMode ? 'dark bg-[#060913] text-slate-100' : 'light bg-slate-50 text-slate-900'}`}>
-      {/* Ambient background glows for high-tech industrial depth */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-cyan-500/10 dark:bg-cyan-500/15 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 -right-40 w-96 h-96 bg-purple-500/10 dark:bg-purple-500/15 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-3xl" />
-      </div>
+  // 4 Default Clean KPI objects with exact values
+  const defaultSolarKpi: KpiMetric = kpis?.renewable_generation || {
+    label: 'Solar Generation',
+    value: 565,
+    unit: 'kW',
+    trend: 12.4,
+    trend_direction: 'up',
+    is_positive_trend: true,
+    context: '650 kWp Rooftop & Ground Array'
+  };
 
+  const defaultDemandKpi: KpiMetric = kpis?.industrial_demand || {
+    label: 'Facility Demand',
+    value: 667,
+    unit: 'kW',
+    trend: -3.2,
+    trend_direction: 'down',
+    is_positive_trend: true,
+    context: '6 Critical Industrial Workcells'
+  };
+
+  const defaultGridKpi: KpiMetric = kpis?.grid_consumption || {
+    label: 'Grid Import',
+    value: 167,
+    unit: 'kW',
+    trend: -18.5,
+    trend_direction: 'down',
+    is_positive_trend: true,
+    context: '500 kW Substation Sanction'
+  };
+
+  const defaultBatteryKpi: KpiMetric = kpis?.battery_soc || {
+    label: 'Battery SOC',
+    value: 68.5,
+    unit: '%',
+    trend: 5.0,
+    trend_direction: 'up',
+    is_positive_trend: true,
+    context: '800 kWh LFP Storage Buffer'
+  };
+
+  return (
+    <div className="flex h-screen w-screen overflow-hidden font-sans bg-[#F4F7FA] text-[#0F172A] relative select-none light">
       {/* Global Interactive Command Palette */}
       <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}
         onSelectSection={setCurrentSection}
-        onToggleTheme={toggleTheme}
-        isDarkMode={isDarkMode}
         onRunOptimization={handleQuickOptimize}
       />
 
       {/* Action Feedback Toast */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 bg-slate-900/95 light:bg-white text-slate-100 light:text-slate-800 rounded-2xl border border-cyan-500/40 shadow-2xl backdrop-blur-2xl animate-in slide-in-from-bottom-5 font-mono text-xs">
-          <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 bg-white text-[#0F172A] rounded-xl border border-[#E2E8F0] shadow-lg animate-in slide-in-from-bottom-5 font-mono text-xs">
+          <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -336,8 +337,8 @@ export function App() {
       />
 
       {/* Main Workspace Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
-        {/* Top Sticky Navigation Bar */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10 bg-[#F4F7FA]">
+        {/* Top Clean White Header */}
         <TopBar
           plant={plant}
           alerts={alerts}
@@ -346,8 +347,6 @@ export function App() {
           onRefresh={loadAllData}
           isRefreshing={isRefreshing}
           onOpenAlerts={() => setCurrentSection('alerts')}
-          isDarkMode={isDarkMode}
-          onToggleTheme={toggleTheme}
           onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
           onTriggerOptimize={handleQuickOptimize}
         />
@@ -369,98 +368,161 @@ export function App() {
         )}
 
         {/* Dynamic Section Content Container */}
-        <main className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        <main className="flex-1 overflow-y-auto px-6 py-6 space-y-6 bg-[#F4F7FA]">
           {/* 1. EXECUTIVE DASHBOARD */}
           {currentSection === 'dashboard' && (
             <div className="space-y-6 max-w-7xl mx-auto">
-              {/* Executive Tier Header & Metric Segmented Control */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-xl font-extrabold text-white light:text-slate-900 tracking-tight font-sans">
-                      Executive Overview
-                    </h2>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 light:bg-emerald-50 text-emerald-400 light:text-emerald-700 border border-emerald-500/20 text-[11px] font-mono font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      100% In-Balance
+              {/* ==============================================================
+                  2. FACILITY HERO BANNER (Crisp 8K ELCOT Campus Image)
+                  ============================================================== */}
+              <div className="relative w-full h-[220px] sm:h-[250px] lg:h-[270px] rounded-[20px] overflow-hidden shadow-xs border border-slate-200/80 bg-slate-900 select-none">
+                {/* Background Campus Photo */}
+                <img
+                  src="/elcot-campus-bg.jpg"
+                  alt="ELCOT Advanced Precision Manufacturing Hub"
+                  className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+                />
+
+                {/* Subtle Left-to-Right Overlay: Preserves photograph visibility */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      'linear-gradient(to right, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0.30) 50%, rgba(15, 23, 42, 0.05) 100%)'
+                  }}
+                />
+
+                {/* Hero Content on the LEFT side */}
+                <div className="relative z-10 h-full flex flex-col justify-between p-6 sm:p-8 max-w-2xl text-white">
+                  {/* Top Status Indicators */}
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/60 backdrop-blur-md text-white border border-white/20 text-xs font-mono font-medium shadow-xs">
+                      <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                      LIVE SCADA
+                    </span>
+                    <span className="px-2.5 py-1 rounded-full bg-slate-900/50 backdrop-blur-md text-slate-200 border border-white/10 text-xs font-mono">
+                      Chennai
+                    </span>
+                    <span className="px-2.5 py-1 rounded-full bg-slate-900/50 backdrop-blur-md text-slate-200 border border-white/10 text-xs font-mono">
+                      50.0 Hz Nominal
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 light:text-slate-500 mt-1 font-mono">
-                    Real-time microgrid dispatch: 650 kWp Solar PV • 800 kWh BESS • 500 kW Grid Limit
-                  </p>
-                </div>
 
-                {/* Metric View Segmented Selector */}
-                <div className="flex items-center gap-1 p-1 bg-slate-900/80 light:bg-slate-200/80 border border-slate-800/80 light:border-slate-300 rounded-xl text-xs font-medium self-start sm:self-auto shadow-inner">
-                  <button
-                    onClick={() => setKpiViewMode('operational')}
-                    className={clsx(
-                      "px-3 py-1.5 rounded-lg transition-all cursor-pointer font-sans",
-                      kpiViewMode === 'operational'
-                        ? "bg-cyan-500/20 text-cyan-300 light:bg-white light:text-cyan-700 light:shadow-xs font-bold border border-cyan-500/30 light:border-slate-200"
-                        : "text-slate-400 hover:text-slate-200 light:text-slate-600"
-                    )}
-                  >
-                    Operational (4)
-                  </button>
-                  <button
-                    onClick={() => setKpiViewMode('financial')}
-                    className={clsx(
-                      "px-3 py-1.5 rounded-lg transition-all cursor-pointer font-sans",
-                      kpiViewMode === 'financial'
-                        ? "bg-amber-500/20 text-amber-300 light:bg-white light:text-amber-700 light:shadow-xs font-bold border border-amber-500/30 light:border-slate-200"
-                        : "text-slate-400 hover:text-slate-200 light:text-slate-600"
-                    )}
-                  >
-                    Financial & Tariffs (4)
-                  </button>
-                  <button
-                    onClick={() => setKpiViewMode('all')}
-                    className={clsx(
-                      "px-3 py-1.5 rounded-lg transition-all cursor-pointer font-sans",
-                      kpiViewMode === 'all'
-                        ? "bg-purple-500/20 text-purple-300 light:bg-white light:text-purple-700 light:shadow-xs font-bold border border-purple-500/30 light:border-slate-200"
-                        : "text-slate-400 hover:text-slate-200 light:text-slate-600"
-                    )}
-                  >
-                    All Metrics (8)
-                  </button>
+                  {/* Main Typography */}
+                  <div className="mt-auto">
+                    <div className="text-xs font-bold uppercase tracking-wider text-sky-300 font-mono mb-1">
+                      Industrial Energy Intelligence
+                    </div>
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight drop-shadow-sm font-sans leading-tight">
+                      ELCOT Advanced Precision Manufacturing Hub
+                    </h1>
+                    <p className="text-xs sm:text-sm text-slate-200 mt-1 font-sans">
+                      Real-time Microgrid Dispatch: 650 kWp Solar PV • 800 kWh BESS • 500 kW Grid Limit
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Evenly Spaced KPI Cards */}
-              {kpis && (
+              {/* ==============================================================
+                  4. FOUR CLEAN KPI CARDS IMMEDIATELY BELOW HERO
+                  ============================================================== */}
+              <div className="space-y-4">
+                {/* Metric Mode Filter (Optional fine-grained telemetry) */}
+                <div className="flex items-center justify-between gap-4 pb-0.5">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-[#64748B] font-mono">
+                      Real-Time Operational Telemetry
+                    </h2>
+                  </div>
+
+                  <div className="flex items-center gap-1 p-1 bg-white border border-[#E2E8F0] rounded-xl text-xs font-medium shadow-xs">
+                    <button
+                      onClick={() => setKpiViewMode('operational')}
+                      className={clsx(
+                        "px-3 py-1 rounded-lg transition-all cursor-pointer font-sans",
+                        kpiViewMode === 'operational'
+                          ? "bg-sky-50 text-[#0EA5E9] font-bold border border-sky-200 shadow-2xs"
+                          : "text-[#64748B] hover:text-[#0F172A]"
+                      )}
+                    >
+                      Operational (4)
+                    </button>
+                    <button
+                      onClick={() => setKpiViewMode('financial')}
+                      className={clsx(
+                        "px-3 py-1 rounded-lg transition-all cursor-pointer font-sans",
+                        kpiViewMode === 'financial'
+                          ? "bg-amber-50 text-[#F59E0B] font-bold border border-amber-200 shadow-2xs"
+                          : "text-[#64748B] hover:text-[#0F172A]"
+                      )}
+                    >
+                      Financial (4)
+                    </button>
+                    <button
+                      onClick={() => setKpiViewMode('all')}
+                      className={clsx(
+                        "px-3 py-1 rounded-lg transition-all cursor-pointer font-sans",
+                        kpiViewMode === 'all'
+                          ? "bg-purple-50 text-[#8B5CF6] font-bold border border-purple-200 shadow-2xs"
+                          : "text-[#64748B] hover:text-[#0F172A]"
+                      )}
+                    >
+                      All (8)
+                    </button>
+                  </div>
+                </div>
+
+                {/* KPI Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4.5">
                   {(kpiViewMode === 'operational' || kpiViewMode === 'all') && (
                     <>
+                      {/* 1. Solar Generation: 565 kW (#10B981) */}
                       <KpiCard
-                        metric={kpis.renewable_generation}
+                        metric={{
+                          ...defaultSolarKpi,
+                          label: 'Solar Generation'
+                        }}
                         icon={Sun}
                         accentColor="emerald"
-                        tooltip="Real-time Solar PV and Wind Generation"
+                        tooltip="Real-time Solar PV Generation"
                       />
+
+                      {/* 2. Facility Demand: 667 kW (#0EA5E9) */}
                       <KpiCard
-                        metric={kpis.industrial_demand}
+                        metric={{
+                          ...defaultDemandKpi,
+                          label: 'Facility Demand'
+                        }}
                         icon={Factory}
                         accentColor="sky"
-                        tooltip="Aggregate Industrial Load Power"
+                        tooltip="Aggregate Industrial Load Demand"
                       />
+
+                      {/* 3. Grid Import: 167 kW (#F59E0B) */}
                       <KpiCard
-                        metric={kpis.grid_consumption}
+                        metric={{
+                          ...defaultGridKpi,
+                          label: 'Grid Import'
+                        }}
                         icon={Zap}
                         accentColor="amber"
                         tooltip="Substation Net Import Power"
                       />
+
+                      {/* 4. Battery SOC: 68.5% (#8B5CF6) */}
                       <KpiCard
-                        metric={kpis.battery_soc}
+                        metric={{
+                          ...defaultBatteryKpi,
+                          label: 'Battery SOC'
+                        }}
                         icon={BatteryCharging}
-                        accentColor="indigo"
+                        accentColor="purple"
                         tooltip="BESS State of Charge"
                       />
                     </>
                   )}
 
-                  {(kpiViewMode === 'financial' || kpiViewMode === 'all') && (
+                  {(kpiViewMode === 'financial' || kpiViewMode === 'all') && kpis && (
                     <>
                       <KpiCard
                         metric={kpis.current_energy_cost}
@@ -489,22 +551,24 @@ export function App() {
                     </>
                   )}
                 </div>
-              )}
+              </div>
 
-              {/* Core Workspace: Evenly Spaced Two-Column Layout */}
+              {/* ==============================================================
+                  WORKSPACE TWO-COLUMN: LIVE ENERGY FLOW & AI OPTIMIZATION
+                  ============================================================== */}
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-                {/* Left Column (8 cols): Interactive Hero Visualizer */}
+                {/* Left Column (8 cols): Interactive Visualizer */}
                 <div className="xl:col-span-8 space-y-4">
                   {/* Visualizer Tab Switcher Bar */}
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-1.5 p-1 bg-slate-900/80 light:bg-slate-200/80 rounded-xl border border-slate-800/80 light:border-slate-300">
+                    <div className="flex items-center gap-1.5 p-1 bg-white border border-[#E2E8F0] rounded-xl shadow-xs">
                       <button
                         onClick={() => setVisualizerTab('flow')}
                         className={clsx(
                           "flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
                           visualizerTab === 'flow'
-                            ? "bg-cyan-500/20 text-cyan-300 light:bg-white light:text-cyan-700 shadow-xs border border-cyan-500/30 light:border-slate-200"
-                            : "text-slate-400 hover:text-slate-200 light:text-slate-600"
+                            ? "bg-sky-50 text-[#0EA5E9] shadow-2xs border border-sky-200"
+                            : "text-[#64748B] hover:text-[#0F172A]"
                         )}
                       >
                         <GitFork className="w-3.5 h-3.5" />
@@ -515,8 +579,8 @@ export function App() {
                         className={clsx(
                           "flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
                           visualizerTab === 'forecast'
-                            ? "bg-cyan-500/20 text-cyan-300 light:bg-white light:text-cyan-700 shadow-xs border border-cyan-500/30 light:border-slate-200"
-                            : "text-slate-400 hover:text-slate-200 light:text-slate-600"
+                            ? "bg-sky-50 text-[#0EA5E9] shadow-2xs border border-sky-200"
+                            : "text-[#64748B] hover:text-[#0F172A]"
                         )}
                       >
                         <SunMedium className="w-3.5 h-3.5" />
@@ -527,8 +591,8 @@ export function App() {
                         className={clsx(
                           "flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
                           visualizerTab === 'battery'
-                            ? "bg-cyan-500/20 text-cyan-300 light:bg-white light:text-cyan-700 shadow-xs border border-cyan-500/30 light:border-slate-200"
-                            : "text-slate-400 hover:text-slate-200 light:text-slate-600"
+                            ? "bg-sky-50 text-[#0EA5E9] shadow-2xs border border-sky-200"
+                            : "text-[#64748B] hover:text-[#0F172A]"
                         )}
                       >
                         <BatteryCharging className="w-3.5 h-3.5" />
@@ -538,7 +602,7 @@ export function App() {
 
                     <button
                       onClick={() => setCurrentSection(visualizerTab === 'flow' ? 'energyflow' : visualizerTab)}
-                      className="hidden sm:flex items-center gap-1.5 text-xs text-cyan-400 light:text-cyan-700 hover:underline font-mono font-medium cursor-pointer"
+                      className="hidden sm:flex items-center gap-1.5 text-xs text-[#0EA5E9] hover:text-sky-700 hover:underline font-mono font-medium cursor-pointer"
                     >
                       <span>Expanded View</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -563,71 +627,83 @@ export function App() {
                   </div>
                 </div>
 
-                {/* Right Column (4 cols): AI Copilot & Microgrid Operating Vitals */}
+                {/* Right Column (4 cols): AI Optimization Decision Card & Vitals */}
                 <div className="xl:col-span-4 space-y-6">
-                  {/* AI Copilot Recommendation Card */}
-                  <div className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-indigo-950/40 light:from-white light:via-sky-50/50 light:to-indigo-50/40 rounded-2xl border border-indigo-500/30 light:border-indigo-200 p-5 shadow-xl backdrop-blur-2xl relative overflow-hidden transition-colors">
-                    <div className="absolute top-0 right-0 w-64 h-32 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-
-                    {/* AI Header */}
-                    <div className="flex items-center justify-between pb-3.5 border-b border-slate-800/80 light:border-slate-200 relative z-10">
-                      <div className="flex items-center gap-2.5">
-                        <div className="p-2 bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 text-white rounded-xl shadow-md shrink-0">
-                          <Sparkles className="w-4 h-4" />
+                  {/* ==============================================================
+                      7. AI OPTIMIZATION DECISION CARD
+                      ============================================================== */}
+                  <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm transition-all duration-300">
+                    {/* Card Header */}
+                    <div className="flex items-center justify-between pb-3.5 border-b border-[#E2E8F0]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-sky-50 border border-sky-200 text-[#0EA5E9] flex items-center justify-center shadow-xs shrink-0">
+                          <Sparkles className="w-4.5 h-4.5" />
                         </div>
                         <div>
-                          <h3 className="text-xs font-extrabold text-white light:text-slate-900 uppercase tracking-wider font-mono">
-                            AI Copilot Strategy
+                          <div className="text-[11px] font-bold uppercase tracking-wider text-[#0EA5E9] font-mono">
+                            AI OPTIMIZATION
+                          </div>
+                          <h3 className="text-sm font-bold text-[#0F172A] tracking-tight">
+                            Recommended Energy Strategy
                           </h3>
-                          <span className="text-[10px] text-slate-400 light:text-slate-500 font-mono">
-                            MILP Solver v2.10
-                          </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 light:bg-emerald-100 text-emerald-400 light:text-emerald-800 border border-emerald-500/30">
-                          {recommendation ? `${(recommendation.confidence * 100).toFixed(0)}% Conf.` : '94% Conf.'}
-                        </span>
-                      </div>
+                      <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#10B981] border border-emerald-200">
+                        {recommendation ? `${(recommendation.confidence * 100).toFixed(0)}% Conf.` : '94% Conf.'}
+                      </span>
                     </div>
 
                     {/* Recommendation Directive */}
-                    <div className="mt-3.5 p-3.5 bg-slate-950/60 light:bg-white rounded-xl border border-slate-800/80 light:border-slate-200 shadow-inner relative z-10">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-mono font-extrabold uppercase tracking-wider text-cyan-400 light:text-sky-700">
-                          Target: {recommendation?.target_component || 'BESS & Grid Import'}
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-500">Autonomous</span>
+                    <div className="mt-4 p-4 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
+                      <div className="text-sm font-bold text-[#0F172A] flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#0EA5E9]" />
+                        <span>Charge BESS +180 kW for 45 minutes</span>
                       </div>
-                      <p className="text-xs font-medium text-slate-200 light:text-slate-800 leading-relaxed font-sans">
-                        {recommendation?.recommended_action ||
-                          'Pre-charge BESS to 85% before 17:00 IST peak tariff period. Dispatch 350 kW during evening peak to avoid ₹12.50/kWh peak charges.'}
-                      </p>
-                    </div>
-
-                    {/* Projected Key Impacts */}
-                    <div className="grid grid-cols-2 gap-2.5 mt-3.5 relative z-10">
-                      <div className="p-2.5 bg-slate-950/40 light:bg-white/80 rounded-xl border border-slate-800/70 light:border-slate-200">
-                        <span className="text-[10px] font-mono text-slate-400 block">Cost Avoidance</span>
-                        <span className="text-sm font-extrabold font-mono text-emerald-400 light:text-emerald-700">
-                          +₹18,450 <span className="text-[10px] font-normal">/day</span>
-                        </span>
-                      </div>
-                      <div className="p-2.5 bg-slate-950/40 light:bg-white/80 rounded-xl border border-slate-800/70 light:border-slate-200">
-                        <span className="text-[10px] font-mono text-slate-400 block">Peak Shaving</span>
-                        <span className="text-sm font-extrabold font-mono text-cyan-400 light:text-sky-700">
-                          -120 kW <span className="text-[10px] font-normal">Grid</span>
-                        </span>
+                      <div className="mt-2 text-xs text-[#64748B] leading-relaxed">
+                        <strong className="text-[#0F172A]">Why:</strong> Solar generation is above current facility demand and battery SOC is below the optimal reserve target.
                       </div>
                     </div>
 
-                    {/* Dispatch Button */}
-                    <div className="mt-4 pt-3.5 border-t border-slate-800/80 light:border-slate-200 flex items-center justify-between gap-3 relative z-10">
+                    {/* Expected Impact */}
+                    <div className="mt-4">
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] font-mono mb-2.5">
+                        Expected Impact
+                      </div>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
+                          <span className="text-[11px] text-[#64748B] block">Energy Cost</span>
+                          <span className="text-sm font-bold font-mono text-[#10B981]">
+                            ↓ ₹18,450<span className="text-[10px] font-normal text-[#64748B]">/day</span>
+                          </span>
+                        </div>
+                        <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
+                          <span className="text-[11px] text-[#64748B] block">Peak Demand</span>
+                          <span className="text-sm font-bold font-mono text-[#0EA5E9]">
+                            ↓ 120 kW
+                          </span>
+                        </div>
+                        <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
+                          <span className="text-[11px] text-[#64748B] block">Solar Usage</span>
+                          <span className="text-sm font-bold font-mono text-[#10B981]">
+                            ↑ 8.2%
+                          </span>
+                        </div>
+                        <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0]">
+                          <span className="text-[11px] text-[#64748B] block">Production Risk</span>
+                          <span className="text-sm font-bold font-mono text-[#10B981]">
+                            Low
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Primary Action Button */}
+                    <div className="mt-5 pt-3.5 border-t border-[#E2E8F0]">
                       {isCopilotAuthorized ? (
-                        <div className="flex items-center gap-1.5 text-xs text-emerald-400 light:text-emerald-700 font-bold font-mono">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                          <span>Dispatched to SCADA</span>
+                        <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-xl">
+                          <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
+                          <span>Recommendation Applied to SCADA</span>
                         </div>
                       ) : (
                         <button
@@ -637,21 +713,21 @@ export function App() {
                               setIsCopilotDispatching(false);
                               setIsCopilotAuthorized(true);
                               handleQuickOptimize();
-                              showToast('AI supervisory schedule dispatched to SCADA.');
+                              showToast('AI supervisory recommendation dispatched to SCADA.');
                             }, 800);
                           }}
                           disabled={isCopilotDispatching}
-                          className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gradient-to-r from-cyan-500 via-sky-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer disabled:opacity-70"
+                          className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#0EA5E9] hover:bg-[#0284C7] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-70"
                         >
                           {isCopilotDispatching ? (
                             <>
                               <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                              <span>Dispatching...</span>
+                              <span>Applying to SCADA...</span>
                             </>
                           ) : (
                             <>
-                              <span>Authorize & Dispatch</span>
-                              <ChevronRight className="w-3.5 h-3.5" />
+                              <span>Apply Recommendation</span>
+                              <ChevronRight className="w-4 h-4" />
                             </>
                           )}
                         </button>
@@ -659,16 +735,16 @@ export function App() {
                     </div>
                   </div>
 
-                  {/* Microgrid Operating Vitals & Substation Headroom */}
-                  <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-5 shadow-xl backdrop-blur-2xl transition-colors space-y-4">
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 light:border-slate-200">
+                  {/* Microgrid Operating Vitals */}
+                  <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm space-y-4">
+                    <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        <h4 className="text-xs font-bold text-white light:text-slate-900 uppercase tracking-wider font-mono">
+                        <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                        <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider font-mono">
                           Facility Vitals
                         </h4>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400">
+                      <span className="text-[11px] font-mono text-[#64748B]">
                         Chennai Zone 4
                       </span>
                     </div>
@@ -676,61 +752,61 @@ export function App() {
                     {/* Substation Capacity Headroom */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-400 light:text-slate-600 font-mono text-[11px]">Substation Demand</span>
-                        <span className="font-mono font-bold text-slate-200 light:text-slate-800">
-                          {kpis ? `${kpis.grid_consumption.value} kW / 500 kW` : '166.6 kW / 500 kW'}
+                        <span className="text-[#64748B] font-mono text-[11px]">Substation Demand</span>
+                        <span className="font-mono font-bold text-[#0F172A]">
+                          {kpis ? `${kpis.grid_consumption.value} kW / 500 kW` : '167 kW / 500 kW'}
                         </span>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-slate-800 light:bg-slate-200 overflow-hidden">
+                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-500 rounded-full transition-all duration-500"
+                          className="h-full bg-[#F59E0B] rounded-full transition-all duration-500"
                           style={{
                             width: `${Math.min(
                               100,
-                              ((typeof kpis?.grid_consumption.value === 'number' ? kpis.grid_consumption.value : 166.6) / 500) * 100
+                              ((typeof kpis?.grid_consumption.value === 'number' ? kpis.grid_consumption.value : 167) / 500) * 100
                             )}%`
                           }}
                         />
                       </div>
-                      <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                      <div className="flex items-center justify-between text-[10px] text-[#64748B] font-mono">
                         <span>Safe Operating Zone</span>
-                        <span className="text-emerald-400 font-semibold">333.4 kW Margin</span>
+                        <span className="text-[#10B981] font-semibold">333.0 kW Margin</span>
                       </div>
                     </div>
 
                     {/* Carbon Offset & Green Ratio */}
-                    <div className="p-3 bg-slate-950/40 light:bg-slate-50 rounded-xl border border-slate-800/70 light:border-slate-200 flex items-center justify-between">
+                    <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 light:bg-emerald-50 light:text-emerald-700">
+                        <div className="p-2 rounded-lg bg-emerald-50 text-[#10B981]">
                           <Leaf className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-mono text-slate-400 block">Carbon Avoided Today</span>
-                          <strong className="text-xs font-mono text-emerald-400 light:text-emerald-700">
+                          <span className="text-[10px] font-mono text-[#64748B] block">Carbon Avoided Today</span>
+                          <strong className="text-xs font-mono text-[#10B981]">
                             1,240 kg CO₂e
                           </strong>
                         </div>
                       </div>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        -100% Fossil
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-50 text-[#10B981] border border-emerald-200">
+                        100% Green
                       </span>
                     </div>
 
                     {/* Quick Access Section Links */}
-                    <div className="pt-2 border-t border-slate-800/80 light:border-slate-200 grid grid-cols-2 gap-2 text-[11px] font-medium">
+                    <div className="pt-2 border-t border-[#E2E8F0] grid grid-cols-2 gap-2 text-[11px] font-medium">
                       <button
                         onClick={() => setCurrentSection('loads')}
-                        className="flex items-center justify-between p-2 bg-slate-950/30 hover:bg-slate-800/50 light:bg-slate-100 light:hover:bg-slate-200/80 rounded-lg text-slate-300 light:text-slate-700 transition-colors cursor-pointer"
+                        className="flex items-center justify-between p-2 bg-[#F8FAFC] hover:bg-slate-100 rounded-lg text-[#0F172A] transition-colors cursor-pointer border border-[#E2E8F0]"
                       >
                         <span>Industrial Loads (6)</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                        <ChevronRight className="w-3.5 h-3.5 text-[#64748B]" />
                       </button>
                       <button
                         onClick={() => setCurrentSection('simulator')}
-                        className="flex items-center justify-between p-2 bg-slate-950/30 hover:bg-slate-800/50 light:bg-slate-100 light:hover:bg-slate-200/80 rounded-lg text-slate-300 light:text-slate-700 transition-colors cursor-pointer"
+                        className="flex items-center justify-between p-2 bg-[#F8FAFC] hover:bg-slate-100 rounded-lg text-[#0F172A] transition-colors cursor-pointer border border-[#E2E8F0]"
                       >
                         <span>What-If Simulator</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                        <ChevronRight className="w-3.5 h-3.5 text-[#64748B]" />
                       </button>
                     </div>
                   </div>

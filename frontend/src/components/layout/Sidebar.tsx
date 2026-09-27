@@ -14,8 +14,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Flame,
-  Sparkles
+  Flame
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -62,16 +61,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       groupTitle: 'Operations',
       items: [
         { id: 'dashboard', label: 'Executive Dashboard', icon: LayoutDashboard },
-        { id: 'energyflow', label: 'Live Energy Flow', icon: GitFork, badge: 'Live', badgeColor: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' },
+        { id: 'energyflow', label: 'Live Energy Flow', icon: GitFork, badge: 'Live', badgeColor: 'bg-emerald-50 text-[#10B981] border-emerald-200' },
         { id: 'digitaltwin', label: 'Digital Twin Model', icon: Box },
       ]
     },
     {
       groupTitle: 'AI & Dispatch',
       items: [
-        { id: 'forecast', label: 'Renewable Forecast', icon: SunMedium, badge: 'ML', badgeColor: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30' },
-        { id: 'optimization', label: 'AI Optimization', icon: Cpu, badge: 'MILP', badgeColor: 'bg-purple-500/15 text-purple-400 border-purple-500/30' },
-        { id: 'simulator', label: 'What-If Simulator', icon: SlidersHorizontal, badge: 'MPC', badgeColor: 'bg-amber-500/15 text-amber-400 border-amber-500/30' },
+        { id: 'forecast', label: 'Renewable Forecast', icon: SunMedium, badge: 'ML', badgeColor: 'bg-sky-50 text-[#0EA5E9] border-sky-200' },
+        { id: 'optimization', label: 'AI Optimization', icon: Cpu, badge: 'MILP', badgeColor: 'bg-purple-50 text-[#8B5CF6] border-purple-200' },
+        { id: 'simulator', label: 'What-If Simulator', icon: SlidersHorizontal, badge: 'MPC', badgeColor: 'bg-amber-50 text-[#F59E0B] border-amber-200' },
       ]
     },
     {
@@ -95,23 +94,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       className={clsx(
-        'relative flex flex-col bg-slate-900/95 light:bg-white border-r border-slate-800/70 light:border-slate-200 transition-all duration-300 z-40 select-none shadow-xl shadow-black/20 light:shadow-slate-200/50',
+        'relative flex flex-col bg-white border-r border-[#E2E8F0] transition-all duration-300 z-40 select-none shadow-xs',
         collapsed ? 'w-18' : 'w-60'
       )}
     >
       {/* Brand Identity Header */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-slate-800/60 light:border-slate-200">
+      <div className="flex items-center justify-between h-16 px-4 border-b border-[#E2E8F0]">
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center shadow-md shadow-cyan-500/20 shrink-0">
-            <Flame className="w-4 h-4 fill-white/20 animate-pulse-glow" />
+          <div className="w-8 h-8 rounded-xl bg-[#0EA5E9] text-white flex items-center justify-center shadow-xs shrink-0">
+            <Flame className="w-4.5 h-4.5 fill-white/20" />
           </div>
           {!collapsed && (
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base text-white light:text-slate-900 tracking-tight font-sans">
+              <span className="font-extrabold text-base text-[#0F172A] tracking-tight font-sans">
                 ENERGIQ
               </span>
-              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-400 light:text-cyan-700 font-mono">
-                AI
+              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-sky-50 text-[#0EA5E9] font-mono border border-sky-200">
+                SCADA
               </span>
             </div>
           )}
@@ -119,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         
         <button
           onClick={onToggleCollapse}
-          className="p-1 rounded-lg text-slate-400 hover:text-slate-200 light:hover:text-slate-700 hover:bg-slate-800/60 light:hover:bg-slate-100 transition-colors cursor-pointer"
+          className="p-1.5 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 transition-colors cursor-pointer"
           title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
           {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -127,11 +126,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Navigation Groups */}
-      <nav className="flex-1 overflow-y-auto px-2.5 py-3 space-y-3.5">
+      <nav className="flex-1 overflow-y-auto px-2.5 py-3 space-y-3">
         {navGroups.map((group, groupIdx) => (
           <div key={groupIdx} className="space-y-0.5">
             {!collapsed && (
-              <div className="px-3 pt-1.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 light:text-slate-400 font-mono">
+              <div className="px-3 pt-1.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-[#64748B] font-mono">
                 {group.groupTitle}
               </div>
             )}
@@ -144,22 +143,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={item.id}
                   onClick={() => onSelectSection(item.id)}
                   className={clsx(
-                    'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-all group relative cursor-pointer',
+                    'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-all group relative cursor-pointer border border-transparent',
                     isActive
-                      ? 'bg-cyan-500/10 light:bg-slate-100 text-cyan-400 light:text-cyan-700 font-semibold shadow-xs'
-                      : 'text-slate-400 light:text-slate-600 hover:text-slate-200 light:hover:text-slate-900 hover:bg-slate-800/40 light:hover:bg-slate-50'
+                      ? 'bg-[#F0F9FF] text-[#0F172A] font-semibold'
+                      : 'text-[#64748B] hover:text-[#0F172A] hover:bg-slate-50'
                   )}
                   title={collapsed ? item.label : undefined}
                 >
-                  {/* Subtle active left highlight */}
+                  {/* Clean thin blue left indicator (no glowing cyan pill) */}
                   {isActive && (
-                    <div className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-cyan-400 light:bg-cyan-600 shadow-sm shadow-cyan-400/50" />
+                    <div className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-[#0EA5E9]" />
                   )}
                   
                   <Icon
                     className={clsx(
-                      'w-4 h-4 shrink-0 transition-transform duration-150 group-hover:scale-105',
-                      isActive ? 'text-cyan-400 light:text-cyan-600' : 'text-slate-400'
+                      'w-4 h-4 shrink-0 transition-transform duration-150',
+                      isActive ? 'text-[#0EA5E9]' : 'text-[#64748B] group-hover:text-[#0F172A]'
                     )}
                   />
 
@@ -169,7 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       {item.badge && (
                         <span className={clsx(
                           'text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border uppercase shrink-0',
-                          item.badgeColor || 'bg-slate-800 text-slate-400 border-slate-700'
+                          item.badgeColor || 'bg-slate-100 text-slate-600 border-slate-200'
                         )}>
                           {item.badge}
                         </span>
@@ -184,21 +183,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Footer System Telemetry Diagnostic Badge */}
-      <div className="p-3 border-t border-slate-800/60 light:border-slate-200 bg-slate-950/40 light:bg-slate-50/50">
+      <div className="p-3 border-t border-[#E2E8F0] bg-[#F8FAFC]">
         {!collapsed ? (
-          <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+          <div className="flex items-center justify-between text-[11px] font-mono text-[#64748B]">
             <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
               <span>CBC Solver</span>
             </span>
-            <span className="text-cyan-400 light:text-cyan-600 font-semibold">&lt;12ms</span>
+            <span className="text-[#0EA5E9] font-bold">&lt;12ms</span>
           </div>
         ) : (
-          <div className="flex justify-center" title="System Online: PuLP CBC Engine (<12ms)">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="flex justify-center" title="CBC Solver Online (<12ms)">
+            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
           </div>
         )}
       </div>
     </aside>
   );
 };
+
+export default Sidebar;

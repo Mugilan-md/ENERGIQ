@@ -1,52 +1,46 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-@custom-variant dark (&:where(.dark, .dark *));
 @custom-variant light (&:where(.light, .light *));
 
+:root {
+  --bg-app: #F4F7FA;
+  --bg-sidebar: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-card-hover: #F8FAFC;
+  --surface-border: #E2E8F0;
+  --surface-subtle: #F1F5F9;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+
+  /* Semantic Energy Palette */
+  --clr-solar: #10B981;
+  --clr-battery: #8B5CF6;
+  --clr-grid: #F59E0B;
+  --clr-loads: #0EA5E9;
+  --clr-critical: #EF4444;
+
+  --clr-blue: #0EA5E9;
+  --clr-green: #10B981;
+  --clr-orange: #F59E0B;
+  --clr-red: #EF4444;
+  --clr-purple: #8B5CF6;
+}
+
 @layer base {
-  :root {
-    --bg-app: #060913;
-    --bg-sidebar: #090f1d;
-    --surface-card: #0d1527;
-    --surface-card-hover: #131f38;
-    --surface-border: #1a263d;
-    --surface-subtle: #0f182c;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --brand-cyan: #06b6d4;
-    --brand-emerald: #10b981;
-    --brand-amber: #f59e0b;
-    --brand-rose: #f43f5e;
-    --brand-purple: #8b5cf6;
-    --brand-blue: #3b82f6;
-  }
-
-  .light {
-    --bg-app: #f4f6fa;
-    --bg-sidebar: #ffffff;
-    --surface-card: #ffffff;
-    --surface-card-hover: #f8fafc;
-    --surface-border: #e2e8f0;
-    --surface-subtle: #f1f5f9;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --brand-cyan: #0284c7;
-    --brand-emerald: #059669;
-    --brand-amber: #d97706;
-    --brand-rose: #e11d48;
-    --brand-purple: #7c3aed;
-    --brand-blue: #2563eb;
-  }
-
   * {
-    border-color: var(--surface-border);
+    border-color: #E2E8F0;
+  }
+
+  html {
+    background-color: #F4F7FA;
+    color: #0F172A;
   }
 
   body {
-    background-color: var(--bg-app);
-    color: var(--text-primary);
+    background-color: #F4F7FA;
+    color: #0F172A;
     font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -58,108 +52,43 @@
 }
 
 /* =========================================================================
-   Cybernetic Ambient Canvas & Microgrid Visual Grid
-   ========================================================================= */
-
-.bg-cyber-grid {
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.light .bg-cyber-grid {
-  background-image: 
-    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
-}
-
-.bg-dot-matrix {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.light .bg-dot-matrix {
-  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
-}
-
-/* =========================================================================
-   Glassmorphic & High-Tech Command Deck Surfaces
+   Premium Light Industrial SaaS Surfaces
    ========================================================================= */
 
 .glass-panel {
-  background: rgba(13, 21, 39, 0.78);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
 }
 
-.light .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+.glass-panel-interactive {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.35);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+.glass-panel-interactive:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  transform: translateY(-1px);
 }
 
-.glass-card:hover {
-  background: rgba(22, 33, 58, 0.85);
-  border-color: rgba(6, 182, 212, 0.35);
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px -4px rgba(0, 0, 0, 0.6), 0 0 25px rgba(6, 182, 212, 0.12);
+.glass-card-subtle {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
 }
 
-.light .glass-card {
-  background: #ffffff;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.03);
-}
-
-.light .glass-card:hover {
-  background: #ffffff;
-  border-color: rgba(2, 132, 199, 0.35);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px -3px rgba(0, 0, 0, 0.07), 0 0 20px rgba(2, 132, 199, 0.08);
-}
-
-/* Luminous Glow Accents */
-.glow-cyan {
-  box-shadow: 0 0 26px -2px rgba(6, 182, 212, 0.4);
-}
-
-.glow-emerald {
-  box-shadow: 0 0 26px -2px rgba(16, 185, 129, 0.4);
-}
-
-.glow-amber {
-  box-shadow: 0 0 26px -2px rgba(245, 158, 11, 0.4);
-}
-
-.glow-purple {
-  box-shadow: 0 0 26px -2px rgba(139, 92, 246, 0.4);
-}
-
-.glow-rose {
-  box-shadow: 0 0 26px -2px rgba(244, 63, 94, 0.4);
+/* Subtle Technical Dot Matrix Accent */
+.bg-dot-matrix {
+  background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* =========================================================================
-   Flow Line Dash & Energy Particle Animations
+   SCADA Dynamic Conduit Flow Animations
    ========================================================================= */
 
-@keyframes flow-pulse {
+@keyframes flowDash {
   0% {
     stroke-dashoffset: 28;
   }
@@ -168,102 +97,291 @@
   }
 }
 
-.animate-flow-dash {
-  animation: flow-pulse 1s linear infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.85;
-    transform: scale(1);
-    filter: drop-shadow(0 0 6px rgba(6, 182, 212, 0.4));
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 16px rgba(6, 182, 212, 0.85));
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2.5s ease-in-out infinite;
-}
-
-@keyframes beacon-ping {
+@keyframes reverseFlowDash {
   0% {
-    transform: scale(0.9);
-    opacity: 1;
-  }
-  75%, 100% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-}
-
-.animate-beacon-ping {
-  animation: beacon-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-@keyframes radar-sweep {
-  0% {
-    transform: rotate(0deg);
+    stroke-dashoffset: 0;
   }
   100% {
+    stroke-dashoffset: 28;
+  }
+}
+
+.animate-flow-dash {
+  animation: flowDash 1.2s linear infinite;
+}
+
+.animate-flow-dash-reverse {
+  animation: reverseFlowDash 1.2s linear infinite;
+}
+
+.animate-flow-dash-slow {
+  animation: flowDash 2.4s linear infinite;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
     transform: rotate(360deg);
   }
 }
 
 .animate-spin-slow {
-  animation: radar-sweep 24s linear infinite;
+  animation: spinSlow 16s linear infinite;
 }
 
-/* Shimmer Button Effect */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.btn-shimmer {
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite;
-}
-
-/* Custom Sleek Scrollbar */
+/* Custom Clean SaaS Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(6, 9, 19, 0.7);
-}
-
-.light ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #06b6d4;
-}
-
-.light ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-}
-
-.light ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #94A3B8;
 }
 
 /* Custom Number Tabular Alignment */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   Clean Executive KPI & Course Design Cards
+   ========================================================================= */
+
+.card {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: #CBD5E1;
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+.card.green {
+  border-top: 3px solid #10B981;
+}
+.card.orange {
+  border-top: 3px solid #F59E0B;
+}
+.card.red {
+  border-top: 3px solid #EF4444;
+}
+.card.blue {
+  border-top: 3px solid #0EA5E9;
+}
+.card.purple {
+  border-top: 3px solid #8B5CF6;
+}
+
+.card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card .card-header .date {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748B;
+  font-family: var(--font-mono, monospace);
+}
+
+.card .card-header svg {
+  color: #94A3B8;
+  transition: color 0.2s ease;
+}
+
+.card .card-header svg:hover {
+  color: #0F172A;
+}
+
+.card .card-body {
+  margin-bottom: 16px;
+}
+
+.card .card-body h3 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.card .card-body p {
+  font-size: 12px;
+  color: #64748B;
+  margin: 0 0 14px 0;
+  line-height: 1.4;
+}
+
+.card .card-body .progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  font-family: var(--font-mono, monospace);
+}
+
+.card .card-body .progress .progress-bar {
+  flex: 1;
+  height: 6px;
+  background-color: #F1F5F9;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card .card-body .progress .progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card.green .progress-fill {
+  background: #10B981;
+}
+
+.card.orange .progress-fill {
+  background: #F59E0B;
+}
+
+.card.red .progress-fill {
+  background: #EF4444;
+}
+
+.card.blue .progress-fill {
+  background: #0EA5E9;
+}
+
+.card.purple .progress-fill {
+  background: #8B5CF6;
+}
+
+.card .card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.card .card-footer ul {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card .card-footer ul li {
+  margin-left: -6px;
+}
+
+.card .card-footer ul li:first-child {
+  margin-left: 0;
+}
+
+.card .card-footer ul li img {
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.card .card-footer .btn-add {
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background-color: #F1F5F9;
+  border: 2px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.card .card-footer .btn-add:hover {
+  background-color: #0EA5E9;
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+.card .card-footer .btn-countdown {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-family: var(--font-mono, monospace);
+  transition: transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.card .card-footer .btn-countdown:hover {
+  transform: scale(1.03);
+}
+
+.card.green .btn-countdown {
+  background-color: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+
+.card.orange .btn-countdown {
+  background-color: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
+.card.red .btn-countdown {
+  background-color: #FEF2F2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+}
+
+.card.blue .btn-countdown {
+  background-color: #F0F9FF;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
+}
+
+.card.purple .btn-countdown {
+  background-color: #F5F3FF;
+  color: #6D28D9;
+  border: 1px solid #DDD6FE;
 }

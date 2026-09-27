@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Building2, 
-  Activity, 
   Clock, 
   Bell, 
-  UserCheck, 
-  ShieldCheck, 
   RefreshCw,
-  Sun,
-  Moon,
   Search,
-  Sparkles,
-  ChevronDown
+  Sparkles
 } from 'lucide-react';
 import { PlantSummary, SystemAlert } from '@/types';
 import clsx from 'clsx';
@@ -24,8 +18,6 @@ interface TopBarProps {
   onRefresh: () => void;
   isRefreshing: boolean;
   onOpenAlerts: () => void;
-  isDarkMode?: boolean;
-  onToggleTheme?: () => void;
   onOpenCommandPalette?: () => void;
   onTriggerOptimize?: () => void;
 }
@@ -38,8 +30,6 @@ export const TopBar: React.FC<TopBarProps> = ({
   onRefresh,
   isRefreshing,
   onOpenAlerts,
-  isDarkMode = true,
-  onToggleTheme,
   onOpenCommandPalette,
   onTriggerOptimize
 }) => {
@@ -57,51 +47,51 @@ export const TopBar: React.FC<TopBarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-slate-900/80 light:bg-white/80 backdrop-blur-xl border-b border-slate-800/60 light:border-slate-200/80 px-6 flex items-center justify-between transition-colors">
+    <header className="sticky top-0 z-30 h-16 bg-white border-b border-[#E2E8F0] px-6 flex items-center justify-between text-[#0F172A] transition-colors shadow-xs">
       {/* Left: Clean Plant Identity & SCADA Status */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500/20 via-sky-500/10 to-indigo-500/20 border border-cyan-500/25 light:border-cyan-300 text-cyan-400 light:text-cyan-700 flex items-center justify-center shadow-xs">
+          <div className="w-9 h-9 rounded-xl bg-sky-50 border border-sky-200 text-[#0EA5E9] flex items-center justify-center shadow-xs">
             <Building2 className="w-4.5 h-4.5" />
           </div>
           <div>
             <div className="flex items-center gap-2.5">
-              <h1 className="text-sm font-bold text-slate-100 light:text-slate-900 tracking-tight font-sans">
-                {plant ? plant.name : 'ELCOT Advanced Manufacturing Hub'}
+              <h1 className="text-sm font-bold text-[#0F172A] tracking-tight font-sans">
+                {plant ? plant.name : 'ELCOT Advanced Precision Manufacturing Hub'}
               </h1>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 light:bg-emerald-50 text-emerald-400 light:text-emerald-700 border border-emerald-500/20 text-[10px] font-mono font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-mono font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
                 Live SCADA
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 light:text-slate-500 font-mono">
+            <p className="text-[11px] text-[#64748B] font-mono">
               {plant ? plant.location : 'Chennai Zone 4'} • 50.0 Hz Nominal
             </p>
           </div>
         </div>
       </div>
 
-      {/* Center: Sleek Quick Command Bar */}
+      {/* Center: Clean Light Search Bar */}
       {onOpenCommandPalette && (
         <button
           onClick={onOpenCommandPalette}
-          className="hidden md:flex items-center gap-2.5 px-4 py-1.5 bg-slate-950/40 hover:bg-slate-950/60 light:bg-slate-100 light:hover:bg-slate-200/70 border border-slate-800/80 light:border-slate-200 rounded-full text-xs text-slate-400 light:text-slate-500 transition-all cursor-pointer shadow-inner w-72 justify-between"
+          className="hidden md:flex items-center gap-2.5 px-4 py-1.5 bg-[#F4F7FA] hover:bg-slate-100 border border-[#E2E8F0] hover:border-slate-300 rounded-full text-xs text-[#64748B] transition-all cursor-pointer w-72 justify-between"
         >
           <div className="flex items-center gap-2">
-            <Search className="w-3.5 h-3.5 text-cyan-400 light:text-cyan-600" />
+            <Search className="w-3.5 h-3.5 text-[#0EA5E9]" />
             <span className="font-sans text-xs">Search assets, commands...</span>
           </div>
-          <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-slate-800 light:bg-white text-slate-400 light:text-slate-600 border border-slate-700 light:border-slate-200">
+          <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-white text-[#64748B] border border-[#E2E8F0] shadow-2xs">
             ⌘K
           </kbd>
         </button>
       )}
 
-      {/* Right: Clean, Evenly Spaced Action Controls */}
+      {/* Right: Clean SaaS Action Controls */}
       <div className="flex items-center gap-2.5">
         {/* Live Clock Chip */}
-        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-slate-950/40 light:bg-slate-100 border border-slate-800/70 light:border-slate-200 rounded-lg text-xs font-mono text-slate-300 light:text-slate-600">
-          <Clock className="w-3.5 h-3.5 text-cyan-400 light:text-cyan-600" />
+        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-[#F4F7FA] border border-[#E2E8F0] rounded-lg text-xs font-mono text-[#0F172A]">
+          <Clock className="w-3.5 h-3.5 text-[#0EA5E9]" />
           <span>{timeStr || '12:00'}</span>
         </div>
 
@@ -109,7 +99,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {onTriggerOptimize && (
           <button
             onClick={onTriggerOptimize}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer hover:shadow-cyan-500/20 hover:scale-102"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#0EA5E9] hover:bg-[#0284C7] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             title="Solve Automated MILP Optimization"
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -121,56 +111,43 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onRefresh}
           disabled={isRefreshing}
-          className="p-2 text-slate-400 hover:text-slate-200 light:text-slate-500 light:hover:text-slate-800 hover:bg-slate-800/60 light:hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+          className="p-2 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
           title="Sync Telemetry"
         >
-          <RefreshCw className={clsx('w-4 h-4', isRefreshing && 'animate-spin text-cyan-400')} />
+          <RefreshCw className={clsx('w-4 h-4', isRefreshing && 'animate-spin text-[#0EA5E9]')} />
         </button>
 
         {/* Alerts Bell */}
         <button
           onClick={onOpenAlerts}
-          className="relative p-2 text-slate-400 hover:text-slate-200 light:text-slate-500 light:hover:text-slate-800 hover:bg-slate-800/60 light:hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+          className="relative p-2 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
           title="System Alerts"
         >
           <Bell className="w-4 h-4" />
           {unacknowledgedCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-slate-900 light:ring-white animate-pulse" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#EF4444] ring-2 ring-white animate-pulse" />
           )}
         </button>
 
-        {/* Theme Switcher */}
-        {onToggleTheme && (
-          <button
-            onClick={onToggleTheme}
-            className="p-2 text-slate-400 hover:text-slate-200 light:text-slate-500 light:hover:text-slate-800 hover:bg-slate-800/60 light:hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          >
-            {isDarkMode ? (
-              <Sun className="w-4 h-4 text-amber-400" />
-            ) : (
-              <Moon className="w-4 h-4 text-indigo-600" />
-            )}
-          </button>
-        )}
-
         {/* User Role Pill */}
-        <div className="h-5 w-px bg-slate-800 light:bg-slate-200 mx-1" />
-        <div className="flex items-center gap-1.5 bg-slate-950/50 light:bg-slate-100 border border-slate-800/80 light:border-slate-200 rounded-lg px-2.5 py-1">
-          <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white flex items-center justify-center text-[10px] font-bold">
+        <div className="h-5 w-px bg-[#E2E8F0] mx-1" />
+        <div className="flex items-center gap-1.5 bg-[#F4F7FA] border border-[#E2E8F0] rounded-lg px-2.5 py-1">
+          <div className="w-5 h-5 rounded-full bg-[#0EA5E9] text-white flex items-center justify-center text-[10px] font-bold">
             EM
           </div>
           <select
             value={currentRole}
             onChange={(e) => onRoleChange(e.target.value as any)}
-            className="bg-transparent text-xs font-medium text-slate-300 light:text-slate-700 focus:outline-hidden cursor-pointer"
+            className="bg-transparent text-xs font-medium text-[#0F172A] focus:outline-hidden cursor-pointer"
           >
-            <option value="ENERGY_MANAGER">Energy Manager</option>
-            <option value="OPERATOR">Plant Operator</option>
-            <option value="ADMIN">System Admin</option>
+            <option value="ENERGY_MANAGER" className="bg-white text-[#0F172A]">Energy Manager</option>
+            <option value="OPERATOR" className="bg-white text-[#0F172A]">Plant Operator</option>
+            <option value="ADMIN" className="bg-white text-[#0F172A]">System Admin</option>
           </select>
         </div>
       </div>
     </header>
   );
 };
+
+export default TopBar;
