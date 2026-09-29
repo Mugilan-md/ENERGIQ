@@ -454,50 +454,74 @@
 }
 
 /* =========================================================================
-   3D Tilt Hover Effect — Hardware-accelerated, cursor-tracked via JS hook
-   CSS provides the baseline transition & fallback for non-JS hover.
+   3D Tilt Hover Effect — Anti-blur edition
+   Rule: NEVER use translateZ or preserve-3d on the card itself.
+   These cause Windows Chromium to lose ClearType subpixel antialiasing.
+   Instead: perspective() + rotateX/Y only, transform-style: flat.
    ========================================================================= */
 
 .card-tilt,
 .card-tilt-subtle {
-  /* GPU compositing layer — prevents blur & ClearType degradation */
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   will-change: transform, box-shadow;
   transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
               box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1),
               border-color 0.35s ease;
-  /* Baseline: flat, GPU-composited */
-  transform: perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0);
-  transform-style: preserve-3d;
+  /* FLAT — prevents children from entering 3D layer (avoids blur) */
+  transform-style: flat;
+  transform: translateY(0px);
 }
 
-/* --- .card-tilt: large interactive panel cards --- */
+/* Force all text inside tilted cards to stay crisp */
+.card-tilt *,
+.card-tilt-subtle *,
+.card * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+}
+
+/* --- .card-tilt: large panel cards --- */
 .card-tilt:hover {
-  transform: perspective(900px) rotateX(6deg) rotateY(-6deg) translateY(-8px) translateZ(12px);
+  /* NO translateZ — avoids new compositing layer that blurs text */
+  transform: perspective(900px) rotateX(5deg) rotateY(-5deg) translateY(-8px);
   box-shadow:
-    0 30px 60px -12px rgba(6, 182, 212, 0.18),
-    0 20px 40px -8px rgba(15, 23, 42, 0.30),
-    0 4px 12px -2px rgba(15, 23, 42, 0.15);
+    0 28px 55px -12px rgba(6, 182, 212, 0.20),
+    0 18px 36px -8px rgba(15, 23, 42, 0.28),
+    0 6px 14px -4px rgba(15, 23, 42, 0.12);
   border-color: rgba(99, 102, 241, 0.55) !important;
 }
 
 /* --- .card-tilt-subtle: smaller metric / sub-cards --- */
 .card-tilt-subtle:hover {
-  transform: perspective(700px) rotateX(5deg) rotateY(-5deg) translateY(-6px) translateZ(8px);
+  transform: perspective(700px) rotateX(4deg) rotateY(-4deg) translateY(-6px);
   box-shadow:
-    0 20px 40px -8px rgba(6, 182, 212, 0.14),
-    0 12px 24px -6px rgba(15, 23, 42, 0.22),
-    0 4px 8px -2px rgba(15, 23, 42, 0.10);
-  border-color: rgba(148, 163, 184, 0.7) !important;
+    0 18px 36px -8px rgba(6, 182, 212, 0.14),
+    0 10px 22px -5px rgba(15, 23, 42, 0.20),
+    0 4px 8px -2px rgba(15, 23, 42, 0.08);
+  border-color: rgba(148, 163, 184, 0.70) !important;
 }
 
-/* KPI .card base cards — match same tilt */
+/* --- KPI .card base cards --- */
+.card {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+  transform-style: flat;
+  will-change: transform, box-shadow;
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 .card:hover {
-  transform: perspective(900px) rotateX(5deg) rotateY(-5deg) translateY(-7px) translateZ(10px) !important;
+  transform: perspective(900px) rotateX(4deg) rotateY(-4deg) translateY(-7px) !important;
   box-shadow:
-    0 24px 48px -10px rgba(14, 165, 233, 0.16),
-    0 12px 24px -5px rgba(15, 23, 42, 0.22) !important;
+    0 22px 45px -10px rgba(14, 165, 233, 0.18),
+    0 10px 22px -5px rgba(15, 23, 42, 0.20) !important;
 }
 
