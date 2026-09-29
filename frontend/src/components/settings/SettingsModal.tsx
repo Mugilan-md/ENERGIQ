@@ -20,7 +20,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ plant, currentRole
   };
 
   return (
-    <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors max-w-4xl mx-auto">
+    <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors max-w-4xl mx-auto">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500" />
 
       <div className="flex items-center justify-between pb-4 border-b border-slate-800 light:border-slate-200 mb-6">
@@ -72,7 +72,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ plant, currentRole
         </div>
 
         {/* Capacity Parameters */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <div>
             <label className="block text-slate-400 light:text-slate-600 font-semibold mb-1.5 font-mono">
               Solar PV Capacity (kWp)
@@ -109,7 +109,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ plant, currentRole
         </div>
 
         {/* Solver Configuration */}
-        <div className="p-5 bg-cyan-950/20 light:bg-sky-50/50 rounded-xl border border-cyan-500/25 light:border-sky-200 space-y-2.5">
+        <div className="card-tilt-subtle p-5 bg-cyan-950/20 light:bg-sky-50/50 rounded-xl border border-cyan-500/25 light:border-sky-200 space-y-2.5">
           <div className="flex items-center gap-2 font-bold text-cyan-300 light:text-sky-900 font-mono">
             <ShieldCheck className="w-4 h-4 text-cyan-400" />
             <span>Mathematical Optimization Engine Specification</span>

@@ -28,7 +28,7 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({ alerts, onAcknowledge 
   );
 
   return (
-    <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+    <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-amber-500 to-cyan-500" />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -90,7 +90,7 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({ alerts, onAcknowledge 
             <div
               key={alert.id}
               className={clsx(
-                'p-4.5 rounded-xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-xl',
+                'card-tilt-subtle p-4.5 rounded-xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-xl',
                 alert.acknowledged
                   ? 'bg-slate-950/40 light:bg-slate-50/50 border-slate-800/60 light:border-slate-200 opacity-60'
                   : alert.severity === 'CRITICAL'

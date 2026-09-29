@@ -61,7 +61,7 @@ export const LoadMatrix: React.FC<LoadMatrixProps> = ({ loads, onUpdateLoad }) =
   return (
     <div className="space-y-6">
       {/* Top Header & Subsystem Overview */}
-      <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+      <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500" />
         
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
@@ -179,7 +179,7 @@ export const LoadMatrix: React.FC<LoadMatrixProps> = ({ loads, onUpdateLoad }) =
             <div
               key={load.id}
               className={clsx(
-                'rounded-2xl border p-5 transition-all relative flex flex-col justify-between group backdrop-blur-xl',
+                'card-tilt-subtle rounded-2xl border p-5 transition-all relative flex flex-col justify-between group backdrop-blur-xl',
                 !isRunning
                   ? 'bg-slate-900/40 light:bg-slate-100/60 border-slate-800/60 light:border-slate-300 opacity-60'
                   : isCritical

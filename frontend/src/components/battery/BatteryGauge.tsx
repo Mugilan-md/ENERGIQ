@@ -19,7 +19,7 @@ export const BatteryGauge: React.FC<BatteryGaugeProps> = ({ battery }) => {
   const strokeDashoffset = circumference - (soc / 100) * circumference;
 
   return (
-    <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+    <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
       {/* Top Gradient Bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
 
@@ -59,7 +59,7 @@ export const BatteryGauge: React.FC<BatteryGaugeProps> = ({ battery }) => {
       {/* Grid: Circular Gauge + Metrics + Projected Curve */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
         {/* SVG Circular Gauge */}
-        <div className="flex flex-col items-center justify-center p-5 bg-slate-950/70 light:bg-slate-50 rounded-2xl border border-slate-800/80 light:border-slate-200 relative">
+        <div className="card-tilt-subtle flex flex-col items-center justify-center p-5 bg-slate-950/70 light:bg-slate-50 rounded-2xl border border-slate-800/80 light:border-slate-200 relative">
           <div className="relative w-48 h-48 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 170 170">
               <defs>
@@ -177,7 +177,7 @@ export const BatteryGauge: React.FC<BatteryGaugeProps> = ({ battery }) => {
         </div>
 
         {/* 24-Hour Projected SOC Curve */}
-        <div className="p-4 bg-slate-950/60 light:bg-slate-50 rounded-2xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-4 bg-slate-950/60 light:bg-slate-50 rounded-2xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-mono">
             24-Hour Trajectory Projection
           </span>

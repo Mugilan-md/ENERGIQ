@@ -53,7 +53,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
   return (
     <div className="space-y-6">
       {/* Predefined Scenarios Carousel / Badges */}
-      <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+      <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500" />
 
         <div className="flex items-center justify-between mb-4">
@@ -99,7 +99,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
       </div>
 
       {/* Interactive Parameter Knobs */}
-      <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+      <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div className="flex items-center gap-2.5">
             <div className="p-2.5 rounded-xl bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-sm">
@@ -223,7 +223,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
 
       {/* Side-by-Side Comparison: BEFORE vs AFTER */}
       {currentResult && (
-        <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative transition-colors">
+        <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div>
               <h3 className="text-base font-extrabold text-white light:text-slate-900 tracking-tight">
@@ -240,7 +240,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* BEFORE (Baseline) */}
-            <div className="p-5 rounded-2xl border border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-slate-50/60">
+            <div className="card-tilt-subtle p-5 rounded-2xl border border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-slate-50/60">
               <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-800 light:border-slate-200">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                   Before Optimization (Baseline)
@@ -283,7 +283,7 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
             </div>
 
             {/* AFTER (AI Optimized) */}
-            <div className="p-5 rounded-2xl border-2 border-cyan-500/60 light:border-cyan-400 bg-cyan-950/20 light:bg-cyan-50/40 shadow-lg shadow-cyan-500/10">
+            <div className="card-tilt-subtle p-5 rounded-2xl border-2 border-cyan-500/60 light:border-cyan-400 bg-cyan-950/20 light:bg-cyan-50/40 shadow-lg shadow-cyan-500/10">
               <div className="flex items-center justify-between mb-4 pb-2 border-b border-cyan-500/30">
                 <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 light:text-cyan-800 flex items-center gap-1.5 font-mono">
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400" />

@@ -83,7 +83,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
   return (
     <div className="space-y-6">
       {/* Parameter Controls & Trigger Card */}
-      <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+      <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-sky-500 to-indigo-500" />
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
@@ -242,7 +242,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
           <RecommendationCard data={currentResult.explanation} />
 
           {/* Schedule Visualization Chart */}
-          <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl backdrop-blur-2xl transition-colors">
+          <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl backdrop-blur-2xl transition-colors">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-extrabold text-white light:text-slate-900 tracking-tight">
                 Optimal Multi-Period Energy Dispatch Schedule
@@ -309,7 +309,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
           </div>
 
           {/* Schedule Data Table */}
-          <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl backdrop-blur-2xl overflow-hidden transition-colors">
+          <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl backdrop-blur-2xl overflow-hidden transition-colors">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-extrabold text-white light:text-slate-900 tracking-tight">
                 Detailed Numerical Dispatch Matrix

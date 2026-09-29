@@ -632,7 +632,7 @@ export function App() {
                   {/* ==============================================================
                       7. AI OPTIMIZATION DECISION CARD
                       ============================================================== */}
-                  <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm hover:border-slate-300 hover:shadow-md transition-all duration-200">
+                  <div className="card-tilt bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm">
                     {/* Card Header */}
                     <div className="flex items-center justify-between pb-3.5 border-b border-[#E2E8F0]">
                       <div className="flex items-center gap-3">
@@ -736,7 +736,7 @@ export function App() {
                   </div>
 
                   {/* Microgrid Operating Vitals */}
-                  <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm hover:border-slate-300 hover:shadow-md transition-all duration-200 space-y-4">
+                  <div className="card-tilt bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm space-y-4">
                     <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />

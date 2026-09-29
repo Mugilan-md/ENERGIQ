@@ -22,7 +22,7 @@ export const TariffChart: React.FC<TariffChartProps> = ({ gridInfo }) => {
   };
 
   return (
-    <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+    <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
       {/* Top Gradient Bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-rose-500 to-orange-500" />
 
@@ -59,7 +59,7 @@ export const TariffChart: React.FC<TariffChartProps> = ({ gridInfo }) => {
 
       {/* KPI Overview Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div className="p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Current Tariff Tier</span>
           <div className="flex items-center gap-2 mt-1.5">
             <span
@@ -70,7 +70,7 @@ export const TariffChart: React.FC<TariffChartProps> = ({ gridInfo }) => {
           </div>
         </div>
 
-        <div className="p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Next Shift</span>
           <div className="flex items-center gap-1.5 mt-1.5 text-sm font-extrabold text-white light:text-slate-900 font-mono">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
@@ -78,14 +78,14 @@ export const TariffChart: React.FC<TariffChartProps> = ({ gridInfo }) => {
           </div>
         </div>
 
-        <div className="p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Substation Contract Cap</span>
           <span className="text-sm font-extrabold font-mono text-cyan-400 light:text-cyan-700 mt-1.5 block">
             {gridInfo.import_limit_kw} kW Limit
           </span>
         </div>
 
-        <div className="p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-4 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Monthly Demand Charge</span>
           <span className="text-sm font-extrabold font-mono text-rose-400 light:text-rose-700 mt-1.5 block">
             ₹{gridInfo.demand_charge_exposure.toLocaleString()}

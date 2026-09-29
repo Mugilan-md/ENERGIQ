@@ -42,7 +42,7 @@ export const DigitalTwinView: React.FC<DigitalTwinViewProps> = ({ twinState }) =
   return (
     <div className="space-y-6">
       {/* Real-time Busbar Telemetry & Health */}
-      <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+      <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 to-indigo-500" />
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -112,7 +112,7 @@ export const DigitalTwinView: React.FC<DigitalTwinViewProps> = ({ twinState }) =
       </div>
 
       {/* Synchronized Component Nodes Matrix */}
-      <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl backdrop-blur-2xl transition-colors">
+      <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl backdrop-blur-2xl transition-colors">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-extrabold text-white light:text-slate-900 tracking-tight flex items-center gap-2">
             <Workflow className="w-4 h-4 text-cyan-400" />
@@ -128,7 +128,7 @@ export const DigitalTwinView: React.FC<DigitalTwinViewProps> = ({ twinState }) =
             return (
               <div
                 key={node.id}
-                className="p-5 rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-white hover:border-cyan-500/50 light:hover:border-cyan-300 transition-all shadow-md group"
+                className="card-tilt-subtle p-5 rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-white hover:border-cyan-500/50 light:hover:border-cyan-300 transition-all shadow-md group"
               >
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2.5">

@@ -22,7 +22,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({ data, on
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-indigo-950/40 light:from-white light:via-sky-50/50 light:to-indigo-50/40 rounded-2xl border border-indigo-500/35 light:border-sky-200 p-6 shadow-2xl shadow-black/25 backdrop-blur-2xl relative overflow-hidden transition-colors">
+    <div className="card-tilt bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-indigo-950/40 light:from-white light:via-sky-50/50 light:to-indigo-50/40 rounded-2xl border border-indigo-500/35 light:border-sky-200 p-6 shadow-2xl shadow-black/25 backdrop-blur-2xl relative overflow-hidden transition-colors">
       {/* Top glowing ambient gradient */}
       <div className="absolute top-0 right-0 w-96 h-36 bg-gradient-to-bl from-purple-500/15 via-cyan-500/15 to-transparent blur-3xl pointer-events-none" />
 

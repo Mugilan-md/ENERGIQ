@@ -452,3 +452,45 @@
   color: #6D28D9;
   border: 1px solid #DDD6FE;
 }
+
+/* =========================================================================
+   3D Tilt Hover Effect for All Remaining Interactive Cards Across ENERGIQ
+   ========================================================================= */
+
+.card-tilt {
+  /* Hardware-accelerated 3D perspective context with anti-blur preservation */
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  will-change: transform, box-shadow, border-color;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.28s ease;
+}
+
+.card-tilt:hover {
+  transform: perspective(1000px) rotateX(1.8deg) rotateY(-1.8deg) translateY(-4px) translateZ(0);
+  box-shadow: 0 18px 36px -8px rgba(15, 23, 42, 0.12), 0 8px 16px -4px rgba(15, 23, 42, 0.05);
+  border-color: #CBD5E1;
+}
+
+/* For smaller sub-cards, status metrics and load cells */
+.card-tilt-subtle {
+  transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  will-change: transform, box-shadow, border-color;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.25s ease;
+}
+
+.card-tilt-subtle:hover {
+  transform: perspective(800px) rotateX(1.5deg) rotateY(-1.5deg) translateY(-3px) translateZ(0);
+  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.10), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+  border-color: #94A3B8;
+}

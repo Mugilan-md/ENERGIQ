@@ -38,7 +38,7 @@ export const ForecastChart: React.FC<ForecastChartProps> = ({
   };
 
   return (
-    <div className="bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
+    <div className="card-tilt bg-slate-900/80 light:bg-white rounded-2xl border border-slate-800/90 light:border-slate-200 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl relative overflow-hidden transition-colors">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-sky-500 to-indigo-500" />
 
       {/* Header & Controls */}
@@ -163,19 +163,19 @@ export const ForecastChart: React.FC<ForecastChartProps> = ({
 
       {/* Model Evaluation Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div className="p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">MAE (Error)</span>
           <span className="text-lg font-black font-mono text-cyan-400 light:text-sky-700 mt-0.5 block">{data.mae} kW</span>
         </div>
-        <div className="p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">RMSE</span>
           <span className="text-lg font-black font-mono text-white light:text-slate-800 mt-0.5 block">{data.rmse} kW</span>
         </div>
-        <div className="p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">MAPE</span>
           <span className="text-lg font-black font-mono text-amber-400 light:text-amber-700 mt-0.5 block">{data.mape}%</span>
         </div>
-        <div className="p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
+        <div className="card-tilt-subtle p-3.5 bg-slate-950/60 light:bg-slate-50 rounded-xl border border-slate-800/80 light:border-slate-200">
           <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">R² Score</span>
           <span className="text-lg font-black font-mono text-emerald-400 light:text-emerald-700 mt-0.5 block">{data.r2}</span>
         </div>
