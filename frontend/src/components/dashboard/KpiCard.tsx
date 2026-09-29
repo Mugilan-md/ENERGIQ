@@ -1,6 +1,6 @@
 import React from 'react';
 import { KpiMetric } from '@/types';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import clsx from 'clsx';
 
 interface KpiCardProps {
@@ -11,24 +11,17 @@ interface KpiCardProps {
   secondaryInfo?: string;
   progressPercent?: string;
   progressLabel?: string;
-  imgSrc1?: string;
-  imgAlt1?: string;
-  imgSrc2?: string;
-  imgAlt2?: string;
   countdownText?: string;
 }
 
 export const KpiCard: React.FC<KpiCardProps> = ({
   metric,
+  icon: Icon,
   accentColor = 'sky',
   tooltip,
   secondaryInfo,
   progressPercent: customProgress,
   progressLabel = 'Capacity',
-  imgSrc1,
-  imgAlt1,
-  imgSrc2,
-  imgAlt2,
   countdownText: customCountdown
 }) => {
   // Map accentColor to semantic colorClass
@@ -81,44 +74,6 @@ export const KpiCard: React.FC<KpiCardProps> = ({
 
   const progressPercent = getProgressData();
 
-  // Curated Unsplash engineer / operator avatars
-  const defaultAvatars: Record<string, { src1: string; alt1: string; src2: string; alt2: string }> = {
-    green: {
-      src1: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-      alt1: 'Solar PV Lead',
-      src2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-      alt2: 'Array Specialist'
-    },
-    blue: {
-      src1: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
-      alt1: 'Plant Operations Manager',
-      src2: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
-      alt2: 'SCADA Dispatcher'
-    },
-    orange: {
-      src1: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80',
-      alt1: 'Substation Control Lead',
-      src2: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80',
-      alt2: 'Feeder Specialist'
-    },
-    purple: {
-      src1: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-      alt1: 'BESS Battery Specialist',
-      src2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-      alt2: 'Thermal Engineer'
-    },
-    red: {
-      src1: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-      alt1: 'Safety Auditor',
-      src2: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-      alt2: 'Interconnect Officer'
-    }
-  };
-
-  const avatars = defaultAvatars[colorClass] || defaultAvatars.blue;
-  const avatar1 = imgSrc1 || avatars.src1;
-  const avatar2 = imgSrc2 || avatars.src2;
-
   // Countdown / Tag string
   const countdownText = customCountdown || (
     metric.trend ? `${metric.trend_direction === 'up' ? '↑' : metric.trend_direction === 'down' ? '↓' : '→'} ${metric.trend}` : 'LIVE'
@@ -128,10 +83,13 @@ export const KpiCard: React.FC<KpiCardProps> = ({
     <div className={clsx('card bg-white border border-[#E2E8F0] shadow-xs', colorClass)} title={tooltip}>
       {/* Card Header: Label & Action Icon */}
       <div className="card-header">
-        <div className="date font-mono text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-          {metric.label}
+        <div className="flex items-center gap-1.5 min-w-0">
+          {Icon && <Icon className="w-3.5 h-3.5 text-[#64748B] shrink-0" />}
+          <div className="date font-mono text-xs font-semibold text-[#64748B] uppercase tracking-wider truncate">
+            {metric.label}
+          </div>
         </div>
-        <MoreHorizontal className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" />
+        <MoreHorizontal className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer shrink-0" />
       </div>
 
       {/* Card Body: Metric Value, Description, Progress */}
@@ -161,29 +119,14 @@ export const KpiCard: React.FC<KpiCardProps> = ({
         </div>
       </div>
 
-      {/* Card Footer: Operators, Add, Countdown/Status Tag */}
+      {/* Card Footer: Live Telemetry Indicator & Trend Tag */}
       <div className="card-footer pt-3 border-t border-slate-100 flex items-center justify-between">
-        <ul className="flex items-center">
-          {avatar1 && (
-            <li>
-              <img src={avatar1} alt={imgAlt1 || 'operator 1'} className="w-6 h-6 rounded-full border-2 border-white object-cover shadow-2xs" />
-            </li>
-          )}
-          {avatar2 && (
-            <li>
-              <img src={avatar2} alt={imgAlt2 || 'operator 2'} className="w-6 h-6 rounded-full border-2 border-white object-cover shadow-2xs" />
-            </li>
-          )}
-          <li>
-            <button
-              onClick={(e) => e.preventDefault()}
-              className="btn-add"
-              title="Add dispatch threshold"
-            >
-              <Plus className="w-3 h-3" />
-            </button>
-          </li>
-        </ul>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[11px] font-mono font-medium text-[#64748B] tracking-wide uppercase">
+            Live Telemetry
+          </span>
+        </div>
 
         <span className="btn-countdown text-[11px] font-mono font-bold">
           {countdownText}
