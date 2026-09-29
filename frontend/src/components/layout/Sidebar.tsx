@@ -109,9 +109,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="font-extrabold text-base text-[#0F172A] tracking-tight font-sans">
                 ENERGIQ
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-sky-50 text-[#0EA5E9] font-mono border border-sky-200">
-                SCADA
-              </span>
             </div>
           )}
         </div>

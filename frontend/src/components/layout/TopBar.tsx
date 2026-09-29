@@ -47,50 +47,50 @@ export const TopBar: React.FC<TopBarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-white border-b border-[#E2E8F0] px-6 flex items-center justify-between text-[#0F172A] transition-colors shadow-xs">
-      {/* Left: Clean Plant Identity & SCADA Status */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-sky-50 border border-sky-200 text-[#0EA5E9] flex items-center justify-center shadow-xs">
-            <Building2 className="w-4.5 h-4.5" />
+    <header className="sticky top-0 z-30 h-16 bg-white border-b border-[#E2E8F0] px-5 sm:px-6 flex items-center justify-between text-[#0F172A] transition-colors shadow-xs gap-4">
+      {/* Left: Clean Plant Identity & Telemetry Status */}
+      <div className="flex items-center gap-3 shrink-0">
+        <div className="w-9 h-9 rounded-xl bg-sky-50 border border-sky-200 text-[#0EA5E9] flex items-center justify-center shadow-xs shrink-0">
+          <Building2 className="w-4.5 h-4.5" />
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <h1 className="text-sm font-bold text-[#0F172A] tracking-tight font-sans truncate">
+              {plant ? plant.name : 'ELCOT Advanced Precision Manufacturing Hub'}
+            </h1>
+            <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-mono font-semibold whitespace-nowrap leading-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Live Telemetry
+            </span>
           </div>
-          <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="text-sm font-bold text-[#0F172A] tracking-tight font-sans">
-                {plant ? plant.name : 'ELCOT Advanced Precision Manufacturing Hub'}
-              </h1>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-mono font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                Live SCADA
-              </span>
-            </div>
-            <p className="text-[11px] text-[#64748B] font-mono">
-              {plant ? plant.location : 'Chennai Zone 4'} • 50.0 Hz Nominal
-            </p>
-          </div>
+          <p className="text-[11px] text-[#64748B] font-mono truncate">
+            {plant ? plant.location : 'Chennai Zone 4'} • 50.0 Hz Nominal
+          </p>
         </div>
       </div>
 
-      {/* Center: Clean Light Search Bar */}
-      {onOpenCommandPalette && (
-        <button
-          onClick={onOpenCommandPalette}
-          className="hidden md:flex items-center gap-2.5 px-4 py-1.5 bg-[#F4F7FA] hover:bg-slate-100 border border-[#E2E8F0] hover:border-slate-300 rounded-full text-xs text-[#64748B] transition-all cursor-pointer w-72 justify-between"
-        >
-          <div className="flex items-center gap-2">
-            <Search className="w-3.5 h-3.5 text-[#0EA5E9]" />
-            <span className="font-sans text-xs">Search assets, commands...</span>
-          </div>
-          <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-white text-[#64748B] border border-[#E2E8F0] shadow-2xs">
-            ⌘K
-          </kbd>
-        </button>
-      )}
+      {/* Center: Clean Search Bar Centered with Equal Margins */}
+      <div className="flex-1 hidden md:flex justify-center max-w-md mx-2">
+        {onOpenCommandPalette && (
+          <button
+            onClick={onOpenCommandPalette}
+            className="w-full flex items-center justify-between gap-2 px-3.5 h-9 bg-[#F4F7FA] hover:bg-slate-100 border border-[#E2E8F0] hover:border-slate-300 rounded-lg text-xs text-[#64748B] transition-all cursor-pointer shadow-2xs"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <Search className="w-3.5 h-3.5 text-[#0EA5E9] shrink-0" />
+              <span className="font-sans text-xs truncate">Search assets, commands...</span>
+            </div>
+            <kbd className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-white text-[#64748B] border border-[#E2E8F0] shadow-2xs shrink-0">
+              ⌘K
+            </kbd>
+          </button>
+        )}
+      </div>
 
-      {/* Right: Clean SaaS Action Controls */}
-      <div className="flex items-center gap-2.5">
+      {/* Right: Clean Action Controls with Uniform Heights (h-9) and Balanced Spacing */}
+      <div className="flex items-center gap-2 shrink-0">
         {/* Live Clock Chip */}
-        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-[#F4F7FA] border border-[#E2E8F0] rounded-lg text-xs font-mono text-[#0F172A]">
+        <div className="hidden lg:flex items-center gap-1.5 px-3 h-9 bg-[#F4F7FA] border border-[#E2E8F0] rounded-lg text-xs font-mono text-[#0F172A] shadow-2xs">
           <Clock className="w-3.5 h-3.5 text-[#0EA5E9]" />
           <span>{timeStr || '12:00'}</span>
         </div>
@@ -99,7 +99,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {onTriggerOptimize && (
           <button
             onClick={onTriggerOptimize}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#0EA5E9] hover:bg-[#0284C7] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 h-9 bg-[#0EA5E9] hover:bg-[#0284C7] text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer shrink-0"
             title="Solve Automated MILP Optimization"
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -111,7 +111,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           onClick={onRefresh}
           disabled={isRefreshing}
-          className="p-2 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+          className="w-9 h-9 flex items-center justify-center text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 rounded-lg border border-transparent hover:border-[#E2E8F0] transition-colors cursor-pointer shrink-0"
           title="Sync Telemetry"
         >
           <RefreshCw className={clsx('w-4 h-4', isRefreshing && 'animate-spin text-[#0EA5E9]')} />
@@ -120,7 +120,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Alerts Bell */}
         <button
           onClick={onOpenAlerts}
-          className="relative p-2 text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+          className="relative w-9 h-9 flex items-center justify-center text-[#64748B] hover:text-[#0F172A] hover:bg-slate-100 rounded-lg border border-transparent hover:border-[#E2E8F0] transition-colors cursor-pointer shrink-0"
           title="System Alerts"
         >
           <Bell className="w-4 h-4" />
@@ -129,11 +129,13 @@ export const TopBar: React.FC<TopBarProps> = ({
           )}
         </button>
 
-        {/* User Role Pill */}
-        <div className="h-5 w-px bg-[#E2E8F0] mx-1" />
-        <div className="flex items-center gap-1.5 bg-[#F4F7FA] border border-[#E2E8F0] rounded-lg px-2.5 py-1">
-          <div className="w-5 h-5 rounded-full bg-[#0EA5E9] text-white flex items-center justify-center text-[10px] font-bold">
-            EM
+        {/* Divider */}
+        <div className="h-5 w-px bg-[#E2E8F0] mx-0.5 shrink-0" />
+
+        {/* User Role Selector */}
+        <div className="flex items-center gap-1.5 bg-[#F4F7FA] border border-[#E2E8F0] rounded-lg px-2.5 h-9 shadow-2xs shrink-0">
+          <div className="w-5 h-5 rounded-full bg-[#0EA5E9] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
+            {currentRole === 'ADMIN' ? 'AD' : currentRole === 'OPERATOR' ? 'OP' : 'EM'}
           </div>
           <select
             value={currentRole}
