@@ -23,7 +23,7 @@ export const EnergyFlowDiagram: React.FC<EnergyFlowDiagramProps> = ({ data }) =>
   const isBalanced = Math.abs(totalIn - totalOut) < 1.0;
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 sm:p-5 shadow-sm relative overflow-hidden select-none">
+    <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 sm:p-5 shadow-sm hover:border-slate-300 hover:shadow-md transition-all duration-200 relative overflow-hidden select-none">
       {/* Header bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4 relative z-10">
         <div>

@@ -80,11 +80,11 @@ export const KpiCard: React.FC<KpiCardProps> = ({
   );
 
   return (
-    <div className={clsx('card bg-white border border-[#E2E8F0] shadow-xs', colorClass)} title={tooltip}>
+    <div className={clsx('card group', colorClass)} title={tooltip}>
       {/* Card Header: Label & Action Icon */}
       <div className="card-header">
         <div className="flex items-center gap-1.5 min-w-0">
-          {Icon && <Icon className="w-3.5 h-3.5 text-[#64748B] shrink-0" />}
+          {Icon && <Icon className="w-3.5 h-3.5 text-[#64748B] group-hover:text-[#0EA5E9] transition-colors shrink-0" />}
           <div className="date font-mono text-xs font-semibold text-[#64748B] uppercase tracking-wider truncate">
             {metric.label}
           </div>
