@@ -337,7 +337,7 @@ export function App() {
       />
 
       {/* Main Workspace Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10 bg-[#F4F7FA]">
+      <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden relative z-10 bg-[#F4F7FA]">
         {/* Top Clean White Header */}
         <TopBar
           plant={plant}
