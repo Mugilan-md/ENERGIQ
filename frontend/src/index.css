@@ -172,20 +172,20 @@
   overflow: hidden;
   cursor: pointer;
 
-  /* Anti-blur GPU compositing & subpixel antialiasing preservation */
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  /* 2D only — no translateZ, no 3D transforms (prevents Windows ClearType blur) */
+  transform: translateY(0px);
+  transform-style: flat;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   will-change: transform, box-shadow, border-color;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.22s ease;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.32s ease;
 }
 
 .card:hover {
-  transform: translate3d(0, -4px, 0);
-  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.04);
+  transform: translateY(-6px) scale(1.008);
+  box-shadow: 0 14px 28px -4px rgba(15, 23, 42, 0.10), 0 6px 12px -2px rgba(15, 23, 42, 0.06);
 }
 
 /* Green (Solar PV / Savings) Card Hover */
@@ -454,74 +454,83 @@
 }
 
 /* =========================================================================
-   3D Tilt Hover Effect — Anti-blur edition
-   Rule: NEVER use translateZ or preserve-3d on the card itself.
-   These cause Windows Chromium to lose ClearType subpixel antialiasing.
-   Instead: perspective() + rotateX/Y only, transform-style: flat.
+   Premium Card Lift & Motion Effect — ZERO BLUR GUARANTEED
+   
+   Why no rotateX/rotateY:
+   Windows Chromium switches from ClearType → grayscale antialiasing whenever
+   ANY 3D transform (rotateX, rotateY, rotateZ, translateZ, preserve-3d) is
+   applied, blurring ALL text and images inside the element.
+   
+   Solution: Pure 2D transforms only (translateY + scale).
+   The depth/3D illusion is achieved via directional box-shadow from JS.
    ========================================================================= */
 
 .card-tilt,
 .card-tilt-subtle {
-  backface-visibility: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  will-change: transform, box-shadow;
-  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-              border-color 0.35s ease;
-  /* FLAT — prevents children from entering 3D layer (avoids blur) */
+  /* Only 2D transforms — no GPU layer promotion, no blur */
+  transform: translateY(0px) scale(1);
   transform-style: flat;
-  transform: translateY(0px);
-}
+  will-change: transform, box-shadow;
+  transition: transform 0.32s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.32s cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 0.32s ease;
 
-/* Force all text inside tilted cards to stay crisp */
-.card-tilt *,
-.card-tilt-subtle *,
-.card * {
+  /* Text stays crisp at all times */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  backface-visibility: hidden;
+  text-rendering: geometricPrecision;
+  backface-visibility: visible;
 }
 
-/* --- .card-tilt: large panel cards --- */
+/* Crisp text on all card children */
+.card-tilt *,
+.card-tilt-subtle * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* --- Large panel cards: lift + subtle scale + glow shadow --- */
 .card-tilt:hover {
-  /* NO translateZ — avoids new compositing layer that blurs text */
-  transform: perspective(900px) rotateX(5deg) rotateY(-5deg) translateY(-8px);
+  transform: translateY(-10px) scale(1.012);
   box-shadow:
-    0 28px 55px -12px rgba(6, 182, 212, 0.20),
-    0 18px 36px -8px rgba(15, 23, 42, 0.28),
-    0 6px 14px -4px rgba(15, 23, 42, 0.12);
+    0 32px 60px -12px rgba(6, 182, 212, 0.22),
+    0 20px 40px -8px rgba(15, 23, 42, 0.32),
+    0 8px 16px -4px rgba(15, 23, 42, 0.14);
   border-color: rgba(99, 102, 241, 0.55) !important;
 }
 
-/* --- .card-tilt-subtle: smaller metric / sub-cards --- */
+/* --- Sub-metric cards: smaller lift --- */
 .card-tilt-subtle:hover {
-  transform: perspective(700px) rotateX(4deg) rotateY(-4deg) translateY(-6px);
+  transform: translateY(-7px) scale(1.010);
   box-shadow:
-    0 18px 36px -8px rgba(6, 182, 212, 0.14),
-    0 10px 22px -5px rgba(15, 23, 42, 0.20),
-    0 4px 8px -2px rgba(15, 23, 42, 0.08);
+    0 20px 40px -8px rgba(6, 182, 212, 0.15),
+    0 12px 24px -5px rgba(15, 23, 42, 0.22),
+    0 4px 10px -2px rgba(15, 23, 42, 0.10);
   border-color: rgba(148, 163, 184, 0.70) !important;
 }
 
-/* --- KPI .card base cards --- */
+/* --- KPI .card base --- */
 .card {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  backface-visibility: hidden;
+  text-rendering: geometricPrecision;
   transform-style: flat;
   will-change: transform, box-shadow;
-  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 0.32s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.32s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
 }
 
 .card:hover {
-  transform: perspective(900px) rotateX(4deg) rotateY(-4deg) translateY(-7px) !important;
+  transform: translateY(-8px) scale(1.010) !important;
   box-shadow:
-    0 22px 45px -10px rgba(14, 165, 233, 0.18),
-    0 10px 22px -5px rgba(15, 23, 42, 0.20) !important;
+    0 24px 50px -10px rgba(14, 165, 233, 0.20),
+    0 12px 24px -5px rgba(15, 23, 42, 0.24) !important;
 }
 
