@@ -331,25 +331,25 @@ export const WhatIfSimulator: React.FC<WhatIfSimulatorProps> = ({
 
           {/* Quantified Gain Highlights */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-800/60 light:border-slate-100 text-center">
-            <div className="p-4 bg-emerald-950/40 light:bg-emerald-50 rounded-xl border border-emerald-800/50 light:border-emerald-100">
+            <div className="card-tilt-subtle p-4 bg-emerald-950/40 light:bg-emerald-50 rounded-xl border border-emerald-800/50 light:border-emerald-100">
               <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block font-mono">Net Cost Saved</span>
               <span className="text-xl font-black font-mono text-emerald-300 light:text-emerald-700 mt-1 block">
                 ₹{currentResult.comparison.cost_saved.toLocaleString()}
               </span>
             </div>
-            <div className="p-4 bg-cyan-950/40 light:bg-sky-50 rounded-xl border border-cyan-800/50 light:border-sky-100">
+            <div className="card-tilt-subtle p-4 bg-cyan-950/40 light:bg-sky-50 rounded-xl border border-cyan-800/50 light:border-sky-100">
               <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block font-mono">Peak Demand Shaved</span>
               <span className="text-xl font-black font-mono text-cyan-300 light:text-sky-700 mt-1 block">
                 {currentResult.comparison.peak_shaved_kw} kW
               </span>
             </div>
-            <div className="p-4 bg-indigo-950/40 light:bg-indigo-50 rounded-xl border border-indigo-800/50 light:border-indigo-100">
+            <div className="card-tilt-subtle p-4 bg-indigo-950/40 light:bg-indigo-50 rounded-xl border border-indigo-800/50 light:border-indigo-100">
               <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider block font-mono">Renewable Recovered</span>
               <span className="text-xl font-black font-mono text-indigo-300 light:text-indigo-700 mt-1 block">
                 {currentResult.comparison.renewable_recovered_kwh} kWh
               </span>
             </div>
-            <div className="p-4 bg-slate-950/40 light:bg-slate-50 rounded-xl border border-slate-800/70 light:border-slate-200/80">
+            <div className="card-tilt-subtle p-4 bg-slate-950/40 light:bg-slate-50 rounded-xl border border-slate-800/70 light:border-slate-200/80">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Production Target</span>
               <span className="text-sm font-bold text-slate-200 light:text-slate-800 mt-1.5 block">
                 {currentResult.comparison.feasibility}

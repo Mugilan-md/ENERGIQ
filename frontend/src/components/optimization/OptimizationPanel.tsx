@@ -190,7 +190,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
         <>
           {/* Solution KPI Summary Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-            <div className="bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
+            <div className="card-tilt-subtle bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Solver Status</span>
               <span className="text-base font-extrabold text-emerald-400 light:text-emerald-600 flex items-center gap-1.5 mt-1 font-mono">
                 <CheckCircle2 className="w-4 h-4" />
@@ -199,7 +199,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
               <span className="text-[10px] text-slate-400 font-mono mt-0.5 block">Time: {currentResult.solve_time_ms} ms</span>
             </div>
 
-            <div className="bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
+            <div className="card-tilt-subtle bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Estimated Savings</span>
               <span className="text-base font-extrabold text-emerald-400 light:text-emerald-600 mt-1 block font-mono tabular-nums">
                 ₹{currentResult.summary.cost_savings.toLocaleString()}
@@ -209,7 +209,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
               </span>
             </div>
 
-            <div className="bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
+            <div className="card-tilt-subtle bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Peak Grid Demand</span>
               <span className="text-base font-extrabold text-cyan-400 light:text-cyan-700 mt-1 block font-mono tabular-nums">
                 {currentResult.summary.peak_demand_kw} kW
@@ -219,7 +219,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
               </span>
             </div>
 
-            <div className="bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
+            <div className="card-tilt-subtle bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Renewable Utilization</span>
               <span className="text-base font-extrabold text-white light:text-slate-900 mt-1 block font-mono">
                 {currentResult.summary.renewable_utilized_pct}%
@@ -229,7 +229,7 @@ export const OptimizationPanel: React.FC<OptimizationPanelProps> = ({
               </span>
             </div>
 
-            <div className="bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
+            <div className="card-tilt-subtle bg-slate-900/80 light:bg-white p-4 rounded-xl border border-slate-800/90 light:border-slate-200 shadow-xl">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-mono">Production Target</span>
               <span className="text-base font-extrabold text-emerald-400 light:text-emerald-700 mt-1 block font-mono">
                 {currentResult.summary.production_feasibility}

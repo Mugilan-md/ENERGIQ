@@ -54,8 +54,10 @@ import {
   Leaf
 } from 'lucide-react';
 import clsx from 'clsx';
+import { useCardTilt } from '@/utils/useCardTilt';
 
 export function App() {
+  useCardTilt();
   const [currentSection, setCurrentSection] = useState<NavSection>('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [currentRole, setCurrentRole] = useState<'ADMIN' | 'ENERGY_MANAGER' | 'OPERATOR'>('ENERGY_MANAGER');
@@ -775,7 +777,7 @@ export function App() {
                     </div>
 
                     {/* Carbon Offset & Green Ratio */}
-                    <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] flex items-center justify-between">
+                    <div className="card-tilt-subtle p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
                         <div className="p-2 rounded-lg bg-emerald-50 text-[#10B981]">
                           <Leaf className="w-4 h-4" />
@@ -796,14 +798,14 @@ export function App() {
                     <div className="pt-2 border-t border-[#E2E8F0] grid grid-cols-2 gap-2 text-[11px] font-medium">
                       <button
                         onClick={() => setCurrentSection('loads')}
-                        className="flex items-center justify-between p-2 bg-[#F8FAFC] hover:bg-slate-100 rounded-lg text-[#0F172A] transition-colors cursor-pointer border border-[#E2E8F0]"
+                        className="card-tilt-subtle flex items-center justify-between p-2 bg-[#F8FAFC] hover:bg-slate-100 rounded-lg text-[#0F172A] transition-colors cursor-pointer border border-[#E2E8F0]"
                       >
                         <span>Industrial Loads (6)</span>
                         <ChevronRight className="w-3.5 h-3.5 text-[#64748B]" />
                       </button>
                       <button
                         onClick={() => setCurrentSection('simulator')}
-                        className="flex items-center justify-between p-2 bg-[#F8FAFC] hover:bg-slate-100 rounded-lg text-[#0F172A] transition-colors cursor-pointer border border-[#E2E8F0]"
+                        className="card-tilt-subtle flex items-center justify-between p-2 bg-[#F8FAFC] hover:bg-slate-100 rounded-lg text-[#0F172A] transition-colors cursor-pointer border border-[#E2E8F0]"
                       >
                         <span>What-If Simulator</span>
                         <ChevronRight className="w-3.5 h-3.5 text-[#64748B]" />
