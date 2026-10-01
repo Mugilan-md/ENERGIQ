@@ -34,28 +34,28 @@ graph TD
     classDef loadNorm fill:#1e293b,stroke:#64748b,stroke-width:1.5px,color:#f1f5f9;
     classDef curtStyle fill:#450a0a,stroke:#dc2626,stroke-width:1.5px,color:#fecaca;
 
-    Solar["☀️ Solar PV Array<br/><b>650 kWp Rooftop Bifacial</b><br/>Generation: 0 – 620 kW"]:::solarStyle
-    Grid["⚡ Utility Substation<br/><b>500 kW Contract Cap</b><br/>Dynamic ToU Tariffs"]:::gridStyle
-    BESS["🔋 BESS Storage (LFP)<br/><b>800 kWh / ±200 kW</b><br/>SOC: 20% – 90%"]:::bessStyle
-    Curtailment["⚠️ Curtailment Buffer<br/><b>Surplus Protection</b>"]:::curtStyle
+    Solar["☀️ Solar PV Array<br/>650 kWp Rooftop Bifacial<br/>Generation: 0 – 620 kW"]:::solarStyle
+    Grid["⚡ Utility Substation<br/>500 kW Contract Cap<br/>Dynamic ToU Tariffs"]:::gridStyle
+    BESS["🔋 BESS Storage LFP<br/>800 kWh / ±200 kW Inverter<br/>SOC: 20% – 90%"]:::bessStyle
+    Curtailment["⚠️ Curtailment Buffer<br/>Surplus Protection"]:::curtStyle
 
-    Busbar{{"🔄 Common AC Busbar Hub<br/><b>3-Phase 415V RMS • 50.0 Hz</b><br/>Power Factor: 0.982"}}:::hubStyle
+    Busbar{{"🔄 Common AC Busbar Hub<br/>3-Phase 415V RMS • 50.0 Hz<br/>Power Factor: 0.982"}}:::hubStyle
 
     subgraph FactoryLoads ["🏭 Industrial Machine Load Centers (Total: 470 kW Max)"]
-        CNC["🔒 CNC 5-Axis Workcells<br/><b>180 kW • CRITICAL</b><br/>Safety Interlock Locked"]:::loadCrit
-        HVAC["❄️ Cleanroom Chiller<br/><b>110 kW • HIGH</b><br/>Modulatable ±15%"]:::loadNorm
-        AirComp["💨 Compressed Air<br/><b>75 kW • MEDIUM</b><br/>Modulatable ±20%"]:::loadNorm
-        Water["💧 Water Treatment<br/><b>45 kW • FLEXIBLE</b><br/>Sheddable Shiftable"]:::loadNorm
-        EVFleet["🚗 EV Fleet Fast Charging<br/><b>40 kW • FLEXIBLE</b><br/>Demand Responsive"]:::loadNorm
-        UPS["🛡️ Auxiliary Emergency UPS<br/><b>20 kW • MEDIUM</b><br/>Continuous Line"]:::loadNorm
+        CNC["🔒 CNC 5-Axis Workcells<br/>180 kW • CRITICAL<br/>Safety Interlock Locked"]:::loadCrit
+        HVAC["❄️ Cleanroom Chiller<br/>110 kW • HIGH<br/>Modulatable ±15%"]:::loadNorm
+        AirComp["💨 Compressed Air<br/>75 kW • MEDIUM<br/>Modulatable ±20%"]:::loadNorm
+        Water["💧 Water Treatment<br/>45 kW • FLEXIBLE<br/>Sheddable Shiftable"]:::loadNorm
+        EVFleet["🚗 EV Fleet Fast Charging<br/>40 kW • FLEXIBLE<br/>Demand Responsive"]:::loadNorm
+        UPS["🛡️ Auxiliary Emergency UPS<br/>20 kW • MEDIUM<br/>Continuous Line"]:::loadNorm
     end
 
-    Solar -->|P_pv2load| Busbar
-    Solar -->|P_pv2bess| BESS
-    Solar -.->|P_curt| Curtailment
-    Grid <-->|P_grid (Import / Peak Bound)| Busbar
-    Grid -->|P_grid2bess (Off-Peak Pre-charge)| BESS
-    BESS <-->|P_bess (Discharge / Charge)| Busbar
+    Solar -->|Direct Solar to Loads| Busbar
+    Solar -->|Surplus Solar Charge| BESS
+    Solar -.->|Surplus Curtailed| Curtailment
+    Grid <-->|Net Grid Import and Peak Cap| Busbar
+    Grid -->|Off-Peak Pre-charge| BESS
+    BESS <-->|Bi-directional BESS Dispatch| Busbar
 
     Busbar ==> CNC
     Busbar ==> HVAC
@@ -76,23 +76,23 @@ flowchart LR
     classDef ai fill:#581c87,stroke:#c084fc,stroke-width:2px,color:#ffffff;
     classDef db fill:#334155,stroke:#94a3b8,stroke-width:1.5px,color:#ffffff;
 
-    subgraph ClientLayer ["🖥️ Frontend Control Room (Port 5173)"]
+    subgraph ClientLayer ["🖥️ Frontend Control Room - Port 5173"]
         UI["React 19 + TypeScript + Vite<br/>Tailwind CSS v4 Command Center"]:::client
         Charts["Recharts Telemetry Suite<br/>Area, Bar & Composed Schedules"]:::client
         SCADA["Live SCADA TopBar & Beacon<br/>Dynamic Theme & Role Switcher"]:::client
         Flow["Animated SVG Photon Flow<br/>Directional Energy Conduits"]:::client
     end
 
-    subgraph TransportLayer ["🌐 Transport & API Layer (Port 8000)"]
+    subgraph TransportLayer ["🌐 Transport & API Layer - Port 8000"]
         FastAPI["FastAPI High-Performance Engine<br/>Async Endpoints & Pydantic v2"]:::api
-        CORS["CORS & Vite Dev Proxy<br/>/api/* Forwarding"]:::api
+        CORS["CORS & Vite Dev Proxy<br/>Forwarding to Port 8000"]:::api
     end
 
     subgraph IntelligenceLayer ["🧠 AI, Forecasting & Mathematical Core"]
         WeatherAPI["Open-Meteo Weather API<br/>GHI, Temp & Cloud Cover"]:::ai
-        Forecaster["Renewable ML Forecaster<br/>Quantile Regressor (10%–90%)"]:::ai
+        Forecaster["Renewable ML Forecaster<br/>Quantile Regressor 10%–90%"]:::ai
         Optimizer["PuLP CBC MILP Solver<br/>Disaggregated Load Formulation"]:::ai
-        XAI["Explainable AI (XAI) Engine<br/>Causal Rationale & Impact Matrix"]:::ai
+        XAI["Explainable AI Engine<br/>Causal Rationale & Impact Matrix"]:::ai
         DigitalTwin["Microgrid Digital Twin<br/>Busbar Voltage, Hz & Power Factor"]:::ai
         Simulator["What-If Stress Simulator<br/>Parametric Baseline vs. AI Delta"]:::ai
     end
@@ -102,7 +102,7 @@ flowchart LR
         SQL["PostgreSQL / Supabase Schema<br/>schema.sql Industrial Models"]:::db
     end
 
-    UI <-->|HTTP REST / JSON| FastAPI
+    UI <-->|HTTP REST API| FastAPI
     FastAPI --> Forecaster
     WeatherAPI -.-> Forecaster
     FastAPI --> Optimizer
