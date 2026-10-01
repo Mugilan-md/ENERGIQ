@@ -4,12 +4,11 @@
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![PuLP MILP](https://img.shields.io/badge/Optimization-PuLP%20MILP%20CBC-FF6F00.svg)](https://coin-or.github.io/pulp/)
-[![Tailwind CSS v4](https://img.shields.io/badge/TailwindCSS-v4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live%20Demo-black.svg?logo=vercel)](https://energiq-ai.vercel.app)
 
-> **Live Localhost Deployments**:  
-> 🖥️ **Frontend Control Room**: [`http://localhost:5173`](http://localhost:5173)  
-> ⚙️ **Backend Optimization API**: [`http://localhost:8000`](http://localhost:8000)  
+> 🌐 **Live Production Web App**: [**https://energiq-ai.vercel.app**](https://energiq-ai.vercel.app)  
+> ⚙️ **Backend Optimization API**: [`http://localhost:8000`](http://localhost:8000) *(or Render)*  
 > 📑 **Interactive Swagger Docs**: [`http://localhost:8000/docs`](http://localhost:8000/docs)
 
 ---
