@@ -33,7 +33,9 @@ import {
   mockAlerts
 } from './mockData';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+  : '/api';
 
 // In-memory persistent state for interactive client modifications
 let inMemoryLoads = [...mockLoads];
@@ -43,7 +45,9 @@ let inMemoryPlant = { ...mockPlant };
 async function fetchWithFallback<T>(url: string, fallback: T, options?: RequestInit): Promise<T> {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 2500);
+    // Allow up to 15s for Render free-tier cold starts, or 4s for local dev
+    const timeoutMs = import.meta.env.VITE_API_URL ? 15000 : 4000;
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
     const res = await fetch(url, { ...options, signal: controller.signal });
     clearTimeout(timeout);
     
