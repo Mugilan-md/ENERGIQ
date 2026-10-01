@@ -152,6 +152,7 @@ ENERGIQ/
 │   ├── package.json                 # Node.js dependencies & build scripts
 │   ├── tsconfig.json                # TypeScript root configuration
 │   ├── tsconfig.app.json            # Vite frontend TypeScript compiler settings
+│   ├── vercel.json                  # Production SPA routing rewrites for Vercel
 │   ├── vite.config.ts               # Vite configuration with proxy to backend port 8000
 │   ├── index.html                   # HTML entry point with Plus Jakarta Sans & JetBrains Mono
 │   │
@@ -297,6 +298,21 @@ cd backend
 .venv\Scripts\pytest.exe -o pythonpath=. tests/test_api.py
 ```
 *Runs all 14 end-to-end integration tests verifying PuLP MILP solver convergence, critical safety locks, and API schemas.*
+
+### Step 4: Cloud Production Deployment (Vercel + Render)
+- **Frontend (Vercel)**:
+  - Root Directory: `frontend`
+  - Framework: `Vite`
+  - Build Command: `npm run build`
+  - Output Directory: `dist`
+  - Environment Variable: `VITE_API_URL` set to your Render backend URL (e.g., `https://energiq-api.onrender.com`)
+  - Live Demo: [https://energiq-ai.vercel.app](https://energiq-ai.vercel.app)
+- **Backend (Render)**:
+  - Root Directory: `backend`
+  - Runtime: `Python 3`
+  - Build Command: `pip install -r requirements.txt`
+  - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+  - In-memory telemetry repository boots out of the box with zero external database dependencies.
 
 ---
 
