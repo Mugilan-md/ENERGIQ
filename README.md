@@ -38,10 +38,10 @@ Modern industrial manufacturing sites integrate on-site renewable generation (So
 
 ### Frontend
 - **Framework**: React 19 + TypeScript + Vite
-- **Styling**: Tailwind CSS v4 (Industrial Light Control-Room Theme)
+- **Styling**: Tailwind CSS v4 (Cyber-Industrial Dark Command Center with Light Theme Toggle, Glassmorphism, and 2D Hover Lifts)
 - **Data Visualization**: Recharts (ComposedChart, AreaChart, BarChart, LineChart)
 - **Icons**: Lucide React
-- **Animations**: CSS Keyframe Flow Animations + Framer Motion primitives
+- **Animations**: CSS Keyframe Photon Flow Animations, Ambient Glow Meshes, and Fluid 2D Lifts
 
 ### Backend & AI/Optimization
 - **Framework**: Python 3.12 + FastAPI
